@@ -28,7 +28,7 @@ class ProcessaImagem:
         |3|P|7|
         |2|1|8|
         """
-        self.MOORE_OFFSET = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]]
+        self.MOORE_OFFSET = [[0, -1], [-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1]]
 
     """
     Imprime uma certa imagem na tela e espera até o usuário apertar uma tecla para continuar a execução do código
@@ -55,23 +55,26 @@ class ProcessaImagem:
         #Encontra o primeiro pixel branco
         startPixel = self.encontra_ponto_inicial()
         contorno.append(startPixel)
-        pixelOffset = [0, -1]
-        boundaryPixel, pixelOffset = self.moore_neighborhood(startPixel, pixelOffset)
-        cv2.imwrite('./image.png', self.img)
-        pprint(pixelOffset)
-        contorno.append(boundaryPixel)
-
-        for i in range(1000):
-            boundaryPixel, pixelOffset = self.moore_neighborhood(boundaryPixel, [-1, 0])
-            self.img[boundaryPixel.x][boundaryPixel.y] = [255, 0, 0]
-            contorno.append(boundaryPixel)
+        pixel = startPixel
         
-        print(len(contorno))
+        backtrackIndexStart = 0 #(0, -1)
+        countourPixel, backtrackIndexStart = self.moore_neighborhood(pixel, backtrackIndexStart)
+
+        #for i in range(2000):
+        while countourPixel != startPixel:
+            countourPixel, backtrackIndexStart = self.moore_neighborhood(countourPixel, backtrackIndexStart)
+            contorno.append(countourPixel)
+
+        with open("output.txt", "w") as dataFile:
+            dataFile.write(self.converte_pixelArray_to_string(contorno))
+
+        cv2.imshow('image', self.img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
 
-        
 
-        
+
 
     """
     A partir de uma certa imagem em 3 dimensões, dada pelo openCv no formato de cores BGR, em valores que alternam entre 0 e 255 (min e max),
@@ -89,17 +92,19 @@ class ProcessaImagem:
                     pixel = Pixel(i, j, 255)
                     return pixel
 
-    def moore_neighborhood(self, p, offsetEntry):
-        startOffsetIndex = self.MOORE_OFFSET.index(offsetEntry)
+    def moore_neighborhood(self, p, backtrackIndex):
         for i in range(8):
-            index = (i + startOffsetIndex) % len(self.MOORE_OFFSET)
+            index = (i + backtrackIndex) % 8
             neighborX = p.x + self.MOORE_OFFSET[index][0]
             neighborY = p.y + self.MOORE_OFFSET[index][1]
-            #OutOfBoundaryException
-            pprint(self.MOORE_OFFSET[index])
-            neighborPixel = Pixel(neighborX, neighborY, self.bidimensional_image[neighborX][neighborY])
-            self.img[neighborX][neighborY] = [20 * index, 20 * index, 255]
+            neighborValue = self.bidimensional_image[neighborX][neighborY]
+            neighborPixel = Pixel(neighborX , neighborY , neighborValue)
             if neighborPixel.value == 255:
-                self.bidimensional_image[neighborX][neighborY] = 127
-                self.img[neighborX][neighborY] = [150, 30, 255]
-                return neighborPixel, self.MOORE_OFFSET[index]
+                self.img[neighborX][neighborY] = [255, 0, 0]
+                return neighborPixel, index -1 
+
+    def converte_pixelArray_to_string(self, array):
+        content = ''
+        for element in array:
+            content = content + str(element.x) + "," + str(element.y) + "\n"
+        return content
