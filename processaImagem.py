@@ -28,7 +28,7 @@ class ProcessaImagem:
         |3|P|7|
         |2|1|8|
         """
-        self.MOORE_OFFSET = [(0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1)]
+        self.MOORE_OFFSET = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]]
 
     """
     Imprime uma certa imagem na tela e espera até o usuário apertar uma tecla para continuar a execução do código
@@ -54,7 +54,22 @@ class ProcessaImagem:
         self.convert_3d_to_2d_image_array()
         #Encontra o primeiro pixel branco
         startPixel = self.encontra_ponto_inicial()
+        contorno.append(startPixel)
+        pixelOffset = [0, -1]
+        boundaryPixel, pixelOffset = self.moore_neighborhood(startPixel, pixelOffset)
+        cv2.imwrite('./image.png', self.img)
+        pprint(pixelOffset)
+        contorno.append(boundaryPixel)
 
+        for i in range(1000):
+            boundaryPixel, pixelOffset = self.moore_neighborhood(boundaryPixel, [-1, 0])
+            self.img[boundaryPixel.x][boundaryPixel.y] = [255, 0, 0]
+            contorno.append(boundaryPixel)
+        
+        print(len(contorno))
+
+
+        
 
         
 
@@ -71,5 +86,20 @@ class ProcessaImagem:
         for i in range(self.yTotal - 1, -1, -1):
             for j in range(self.xTotal):
                 if self.bidimensional_image[i][j] == 255:
-                    pixel = Pixel(i, j)
+                    pixel = Pixel(i, j, 255)
                     return pixel
+
+    def moore_neighborhood(self, p, offsetEntry):
+        startOffsetIndex = self.MOORE_OFFSET.index(offsetEntry)
+        for i in range(8):
+            index = (i + startOffsetIndex) % len(self.MOORE_OFFSET)
+            neighborX = p.x + self.MOORE_OFFSET[index][0]
+            neighborY = p.y + self.MOORE_OFFSET[index][1]
+            #OutOfBoundaryException
+            pprint(self.MOORE_OFFSET[index])
+            neighborPixel = Pixel(neighborX, neighborY, self.bidimensional_image[neighborX][neighborY])
+            self.img[neighborX][neighborY] = [20 * index, 20 * index, 255]
+            if neighborPixel.value == 255:
+                self.bidimensional_image[neighborX][neighborY] = 127
+                self.img[neighborX][neighborY] = [150, 30, 255]
+                return neighborPixel, self.MOORE_OFFSET[index]
