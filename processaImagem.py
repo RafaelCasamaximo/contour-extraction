@@ -46,7 +46,10 @@ class ProcessaImagem:
         pprint(self.img, width=10)
 
     """
-    
+    Essa função é reponsável por 3 partes principais:
+    1- Encontrar o ponto inicial para o algoritmo
+    2- Extrair todos os pontos subsequentes da figura em sentido horário até encontrar o ponto inicial novamente
+    3- Realizar o log de dados em um txt para ser utilizado posteriormente
     """
     def extrai_contorno(self):
         contorno = []
@@ -85,6 +88,11 @@ class ProcessaImagem:
             for j in range(self.xTotal):
                 self.bidimensional_image[i][j] = self.img[i][j][1]
 
+
+    """
+    Extrai o ponto inicial para começar o algoritmo de moore_neighborhood
+    Percorre a imagem de baixo pra cima, da esquerda pra direita para encontrar o primeiro pixel branco. Após isso, retorna esse pixel (x, y, value)
+    """
     def encontra_ponto_inicial(self):
         for i in range(self.yTotal - 1, -1, -1):
             for j in range(self.xTotal):
@@ -92,6 +100,12 @@ class ProcessaImagem:
                     pixel = Pixel(i, j, 255)
                     return pixel
 
+    """
+    Essa função é o "Core" do programa. Ela identifica o próximo ponto em sentido horário e o ponto de entrada para ele (backtrack).
+    Ele percorre os 8 pixeis adjascentes em sentido horário até encontrar o primeiro pixel branco.
+    Para evitar que o primeiro pixel faça parte do conjunto branco em algum dos lados, o ponto de partida é sempre o lado oposto
+    ao lado inicial. Esse backtrack também é retornado para o próximo ponto
+    """
     def moore_neighborhood(self, p, backtrackIndex):
         for i in range(8):
             index = (i + backtrackIndex) % 8
@@ -103,8 +117,11 @@ class ProcessaImagem:
                 self.img[neighborX][neighborY] = [255, 0, 0]
                 return neighborPixel, index -1 
 
+    """
+    Essa função é utilizada para converter um array de pixeis em uma string para ser impressa no arquivo de texto. Retorna a string.
+    """
     def converte_pixelArray_to_string(self, array):
         content = ''
         for element in array:
-            content = content + str(element.x) + "," + str(element.y) + "\n"
+            content = content + str(element.x) + ", " + str(element.y) + "\n"
         return content
