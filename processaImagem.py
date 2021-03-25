@@ -17,9 +17,9 @@ class ProcessaImagem:
     bidimensional_image: 2d array com [x][y] e do mesmo tamanho que img, o valor de cada posição é o valor B da img 
     MOORE_OFFSET: coordenadas que representam os 8 pontos adjascentes do ponto atual, representandos por (x, y)
     """
-    def __init__(self, path):
-        self.path = path
-        self.img = cv2.imread(path, cv2.COLOR_BGR2GRAY)
+    def __init__(self, figurePath):
+        self.figurePath = figurePath
+        self.img = cv2.imread(figurePath, cv2.COLOR_BGR2GRAY)
         self.yTotal = self.img.shape[0]
         self.xTotal = self.img.shape[1]
         self.bidimensional_image = [[0] * self.xTotal for i in range(self.yTotal)]
@@ -29,6 +29,7 @@ class ProcessaImagem:
         |2|1|8|
         """
         self.MOORE_OFFSET = [[0, -1], [-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1]]
+        self.boundary = []
 
     """
     Imprime uma certa imagem na tela e espera até o usuário apertar uma tecla para continuar a execução do código
@@ -52,12 +53,12 @@ class ProcessaImagem:
     3- Realizar o log de dados em um txt para ser utilizado posteriormente
     """
     def extrai_contorno(self):
-        contorno = []
+        self.boundary = []
         #Converte imagem RGB para imagem PB
         self.convert_3d_to_2d_image_array()
         #Encontra o primeiro pixel branco
         startPixel = self.encontra_ponto_inicial()
-        contorno.append(startPixel)
+        self.boundary.append(startPixel)
         pixel = startPixel
         
         backtrackIndexStart = 0 #(0, -1)
@@ -66,18 +67,18 @@ class ProcessaImagem:
         #for i in range(2000):
         while countourPixel != startPixel:
             countourPixel, backtrackIndexStart = self.moore_neighborhood(countourPixel, backtrackIndexStart)
-            contorno.append(countourPixel)
+            self.boundary.append(countourPixel)
 
-        with open("output.txt", "w") as dataFile:
-            dataFile.write(self.converte_pixelArray_to_string(contorno))
-
-        cv2.imshow('image', self.img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-
-
-
+    """
+    Função responsável por exportar o resultado da extração de contorno em um arquivo path
+    """
+    def exporta_contorno(self, path):
+        try:
+            with open(path, "w") as dataFile:
+                dataFile.write(self.converte_pixelArray_to_string(self.boundary))
+        except:
+            print('Path does not exist for boundary export')
+            return
 
     """
     A partir de uma certa imagem em 3 dimensões, dada pelo openCv no formato de cores BGR, em valores que alternam entre 0 e 255 (min e max),
@@ -125,3 +126,22 @@ class ProcessaImagem:
         for element in array:
             content = content + str(element.x) + ", " + str(element.y) + "\n"
         return content
+
+
+    """
+    Essa função altera a escala e o offset do conjunto do contorno após a extração dele.
+    Caso os valores sejam -1 o atributo será ignorado na alteração da escala
+    """
+    def altera_escala(self, width, height, startXOffset, startYOffset):
+        widthCoef = self.xTotal / width
+        heightCoef = self.yTotal / height
+        
+        for pixel in self.boundary:
+            if width != -1:
+                pixel.x = (pixel.x / widthCoef)
+            if startXOffset != -1:
+                pixel.x = pixel.x + startXOffset
+            if height != -1:
+                pixel.y = (pixel.y / heightCoef)
+            if startYOffset != -1:
+                pixel.y = pixel.y + startYOffset
