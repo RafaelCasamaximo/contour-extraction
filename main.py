@@ -15,11 +15,13 @@ use python main.py --help para ver informações ou use a documentação
 @click.command()
 @click.option('--figure', '-f', required=True, help='Figure name for contour extraction.')
 @click.option('--output', '-o', help='Output file name for contour export.')
-@click.option('--width', '-w', default=-1, help='Max width of boundary set')
-@click.option('--height', '-h', default=-1, help='Max height of boundary set')
-@click.option('--xoffset', '-xo', default=-1, help='X axis offset from start')
-@click.option('--yoffset', '-yo', default=-1, help='Y axis offset from start')
-def cli(figure, output, width, height, xoffset, yoffset):
+@click.option('--width', '-w', default=-1, help='Max width of boundary set.')
+@click.option('--height', '-h', default=-1, help='Max height of boundary set.')
+@click.option('--xoffset', '-xo', default=-1, help='X axis offset from start.')
+@click.option('--yoffset', '-yo', default=-1, help='Y axis offset from start.')
+@click.option('--matlab', '-m', is_flag=True, help='Convert to matlab boundary.')
+@click.option('--verbose', '-v', is_flag=True, help='Runs the program with verbosity. Good for debugging.')
+def cli(figure, output, width, height, xoffset, yoffset, matlab, verbose):
     """A program that get the boundary of a binary-colored figure."""
 
     #Verifica se o path passado como figura é válido e existe. Sai do programa se não foi válido.
@@ -30,6 +32,9 @@ def cli(figure, output, width, height, xoffset, yoffset):
     pi = ProcessaImagem(figure)
     #Extrai o contorno da figura e salva nos atributos de ProcessaImagem
     pi.extrai_contorno()
+    #Converte para o formato matlab como descrito na descrição do comando
+    if matlab:    
+        pi.converte_matlab()
     #Altera a escala do conjunto de pontos extraidos do contorno. Para cada parâmetro -1 (default), o contorno não é alterado naquele quesito
     pi.altera_escala(width, height, xoffset, yoffset)
     #Caso o usuário tenha passado o nome do arquivo desejado, será gerado um novo arquivo de texto com o nome. Caso não seja especificado o nome do arquivo de dados será:

@@ -124,7 +124,7 @@ class ProcessaImagem:
     def converte_pixelArray_to_string(self, array):
         content = ''
         for element in array:
-            content = content + str(element.x) + ", " + str(element.y) + "\n"
+            content = content + str(element.x) + " " + str(element.y) + "\n"
         return content
 
 
@@ -145,3 +145,10 @@ class ProcessaImagem:
                 pixel.y = (pixel.y / heightCoef)
             if startYOffset != -1:
                 pixel.y = pixel.y + startYOffset
+
+    def converte_matlab(self):
+        for pixel in self.boundary:
+            pixel.x = self.xTotal - pixel.x
+            aux = pixel.y
+            pixel.y = pixel.x
+            pixel.x = aux
