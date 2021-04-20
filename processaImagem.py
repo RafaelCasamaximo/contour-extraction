@@ -2,6 +2,8 @@ import cv2
 import json
 from pixel import Pixel
 from pprint import pprint
+from datetime import datetime
+
 
 class ProcessaImagem:
 
@@ -187,6 +189,7 @@ class ProcessaImagem:
         data['metadata'] = []
         data['metadata'].append({
             'figure': self.figurePath,
+            'time': datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
             'width:': width,
             'height': height,
             'xoffset': xoffset,
