@@ -1,4 +1,5 @@
 import cv2
+import json
 from pixel import Pixel
 from pprint import pprint
 
@@ -14,6 +15,7 @@ class ProcessaImagem:
     img: 3d array que guarda valor BGR da imagem [x][y][BGR]
     yTotal: valor total de linhas que tem (pixeis de altura)
     xTotal: valor total de colunas que tem (pixeis de largura)
+    area: valor da área calculada pelo método de Gauss do contorno
     bidimensional_image: 2d array com [x][y] e do mesmo tamanho que img, o valor de cada posição é o valor B da img 
     MOORE_OFFSET: coordenadas que representam os 8 pontos adjascentes do ponto atual, representandos por (x, y)
     """
@@ -22,6 +24,7 @@ class ProcessaImagem:
         self.img = cv2.imread(figurePath, cv2.COLOR_BGR2GRAY)
         self.yTotal = self.img.shape[0]
         self.xTotal = self.img.shape[1]
+        self.area = 0
         self.bidimensional_image = [[0] * self.xTotal for i in range(self.yTotal)]
         """
         |4|5|6|
@@ -146,9 +149,53 @@ class ProcessaImagem:
             if startYOffset != -1:
                 pixel.y = pixel.y + startYOffset
 
+    """
+    Essa função converte o resultado obtido para o matlab, pois em uma imagem o ponto (0, 0) é o ponto
+    superior esquerda da imagem, e no matlab o ponto (0, 0) é dado pela coordenada inferior esquerda
+    """
     def converte_matlab(self):
         for pixel in self.boundary:
             pixel.x = self.xTotal - pixel.x
             aux = pixel.y
             pixel.y = pixel.x
             pixel.x = aux
+
+    """
+    Utiliza um método descrito por Gauss para o cálculo da área de um poligono irregular convexo
+    Utiliza como base: https://www.thecivilengineer.org/education/calculation-examples/item/1319-calculation-example-three-point-resection
+    Para esse algoritmo funcionar ele precisa de uma lista ordenada de pontos. No caso, a própria lista de pontos que foi adquirida a partir da extração de contorno
+    """
+    def calcula_area(self):
+        area = 0
+        i = 0
+        j = 0
+        for index in range(0, (len(self.boundary)) - 1):
+            auxI = self.boundary[index]
+            auxJ = self.boundary[index + 1]
+            area += auxI.y * auxJ.x - auxI.x * auxJ.y
+        auxI = self.boundary[len(self.boundary) - 1]
+        auxJ = self.boundary[0]
+        area += auxI.y * auxJ.x - auxI.x * auxJ.y
+        area = area / 2
+        self.area = area
+
+    """
+    Essa função utiliza de JSON para exportar metadata calculada e dada como input pelo programa
+    """
+    def exporta_metadata(self, output, width, height, xoffset, yoffset):
+        data = {}
+        data['metadata'] = []
+        data['metadata'].append({
+            'figure': self.figurePath,
+            'width:': width,
+            'height': height,
+            'xoffset': xoffset,
+            'yoffset': yoffset,
+            'area': self.area,
+        })
+        try:
+            with open(output, "w") as configFile:
+                json.dump(data, configFile)
+        except:
+            print('Failed at exporting config file.')
+            return

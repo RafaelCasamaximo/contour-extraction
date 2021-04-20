@@ -20,8 +20,9 @@ use python main.py --help para ver informações ou use a documentação
 @click.option('--xoffset', '-xo', default=-1, help='X axis offset from start.')
 @click.option('--yoffset', '-yo', default=-1, help='Y axis offset from start.')
 @click.option('--matlab', '-m', is_flag=True, help='Convert to matlab boundary.')
+@click.option('--metadata', '-md', is_flag=True, help='Generates a metadata file as [output]-metada.json showing the configurations and other usefull info about the boundary and the file.')
 @click.option('--verbose', '-v', is_flag=True, help='Runs the program with verbosity. Good for debugging.')
-def cli(figure, output, width, height, xoffset, yoffset, matlab, verbose):
+def cli(figure, output, width, height, xoffset, yoffset, matlab, metadata, verbose):
     """A program that get the boundary of a binary-colored figure."""
 
     #Verifica se o path passado como figura é válido e existe. Sai do programa se não foi válido.
@@ -41,6 +42,11 @@ def cli(figure, output, width, height, xoffset, yoffset, matlab, verbose):
     # [nome-do-arquivo-figure]-data.txt
     if output == None:
         output = path_leaf(figure)[:-4] + '-data.txt'
+        outputConfig = path_leaf(figure)[:-4] + '-metadata.json'
+    #Calcula a área
+    pi.calcula_area()
+    #Cria um arquivo de configuração quando exporta o txt mostrando informações uteis sobre o arquivo
+    pi.exporta_metadata(outputConfig, width, height, xoffset, yoffset)
     #Cria um novo arquivo com o output
     pi.exporta_contorno(output)
 
