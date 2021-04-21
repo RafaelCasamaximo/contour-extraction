@@ -4,8 +4,10 @@ import os
 import ntpath
 #Biblioteca para CLI
 import click
-#Biblioteca para Processamento de Imagens
+#Classe para Processamento de Imagens
 from processaImagem import ProcessaImagem
+#Classe para a interface gráfica 
+from interface import Interface
 
 
 """
@@ -21,8 +23,9 @@ use python main.py --help para ver informações ou use a documentação
 @click.option('--yoffset', '-yo', default=-1, help='Y axis offset from start.')
 @click.option('--matlab', '-m', is_flag=True, help='Convert to matlab boundary.')
 @click.option('--metadata', '-md', is_flag=True, help='Generates a metadata file as [output]-metada.json showing the configurations and other usefull info about the boundary and the file.')
+@click.option('--graphical', '-gui', is_flag=True, help='Runs the program in the GUI mode (In Development).')
 @click.option('--verbose', '-v', is_flag=True, help='Runs the program with verbosity. Good for debugging.')
-def cli(figure, output, width, height, xoffset, yoffset, matlab, metadata, verbose):
+def cli(figure, output, width, height, xoffset, yoffset, matlab, metadata, graphical, verbose):
     """A program that get the boundary of a binary-colored figure."""
 
     #Verifica se o path passado como figura é válido e existe. Sai do programa se não foi válido.
@@ -31,6 +34,10 @@ def cli(figure, output, width, height, xoffset, yoffset, matlab, metadata, verbo
         quit()
     #Cria um objeto ProcessaImagem, necessário para a realização do algoritmo. O parâmetro figure é o path da figura que irá passar pelo algoritmo.
     pi = ProcessaImagem(figure)
+
+    if graphical:
+        gui = Interface()
+
     #Extrai o contorno da figura e salva nos atributos de ProcessaImagem
     pi.extrai_contorno()
     #Converte para o formato matlab como descrito na descrição do comando

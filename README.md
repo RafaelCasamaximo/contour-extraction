@@ -15,7 +15,8 @@
 `--xoffset/ -xo` - Parâmetro para definir o deslocamento no eixo X (direita) do mínimo valor possivel do conjunto de pontos. Caso não seja inserido ou seja -1 o comando será ignorado.  
 `--yoffset/ -yo` - Parâmetro para definir o deslocamento no eixo Y (baixo) do mínimo valor possivel do conjunto de pontos. Caso não seja inserido ou seja -1 o comando será ignorado.  
 `--matlab/ -m` - Parâmetro para definir se os pontos serão exportados no formato MATLAB, com origem (0, 0) no canto inferior esquerdo.  
-`-metadata/ -md` - Parâmetro para exportar um arquivo de metadata contendo as informações executadas no projeto em questão, gerando um arquivo `[output/figure]-metadata.json`. 
+`-metadata/ -md` - Parâmetro para exportar um arquivo de metadata contendo as informações executadas no projeto em questão, gerando um arquivo `[output/figure]-metadata.json`.  
+`--graphical/ -gui` **EM DESENVOLVIMENTO** - Roda o programa com a interface de usuário experimental.  
 `--verbose` **EM DESENVOLVIMENTO** - Parâmetro para habilitar o modo verboso (detalhes de comandos e procedimentos).  
 
 ##### Dependências  
