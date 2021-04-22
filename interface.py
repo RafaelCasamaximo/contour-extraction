@@ -32,18 +32,24 @@ class Interface:
         #Sliders de Treshold para RGB para criar a máscara
         red_slider = Scale(frame_mask_image, from_=0, to=255, orient=HORIZONTAL)
         red_slider.grid(row=2, column=0, sticky='we')
+        label_red = Label( frame_mask_image, text='Limiar do Vermelho')
+        label_red.grid(row=3, column=0, sticky='w')
 
         green_slider = Scale(frame_mask_image, from_=0, to=255, orient=HORIZONTAL)
-        green_slider.grid(row=2, column=0, sticky='we')
-
+        green_slider.grid(row=4, column=0, sticky='we')
+        label_green = Label( frame_mask_image, text='Limiar do Verde')
+        label_green.grid(row=5, column=0, sticky='w')
+        
         blue_slider = Scale(frame_mask_image, from_=0, to=255, orient=HORIZONTAL)
-        blue_slider.grid(row=2, column=0, sticky='we')
+        blue_slider.grid(row=6, column=0, sticky='we')
+        label_blue = Label( frame_mask_image, text='Limiar do Azul')
+        label_blue.grid(row=7, column=0, sticky='w')
 
         #Responsável pelas abas
         tabs_notebook.add(frame_mask_image, text='Máscara')
         tabs_notebook.add(frame_contour_image, text='Contorno')
         tabs_notebook.add(frame_sections_image, text='Seções')
-
+    
 
     def abre_arquivo_fotografia(self, context):
         self.root.filename = filedialog.askopenfilename(initialdir='./', title='Escolha um arquivo de imagem', filetype=(('Png Files', '*.png'),("All Files", "*.*")))
@@ -53,4 +59,4 @@ class Interface:
         canvas_arquivo_fotografia = Canvas(context, bg='black', width=500, height=500)
         imagem_arquivo_fotografia = ImageTk.PhotoImage(Image.open(self.root.filename))
         label_fotografia = Label(context, image=imagem_arquivo_fotografia)
-        label_fotografia.grid(row=1, column=0, sticky='NW')
+        canvas_arquivo_fotografia.grid(row=1, column=0, sticky='NW')
