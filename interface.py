@@ -75,22 +75,22 @@ class Interface:
         label_fotografia.grid(row=1, column=0, sticky='NW', padx=10, pady=10)
 
         #Sliders de Treshold para RGB para criar a máscara
-        red_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL)
+        red_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change)
         red_slider.grid(row=2, column=0, sticky='we')
         label_red = Label(self.root_widgets['frame_mask_image'], text='Limiar do Vermelho')
         label_red.grid(row=3, column=0, sticky='w')
 
-        green_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL)
+        green_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, label='teste', command=self.on_scale_change)
         green_slider.grid(row=4, column=0, sticky='we')
         label_green = Label(self.root_widgets['frame_mask_image'], text='Limiar do Verde')
         label_green.grid(row=5, column=0, sticky='w')
         
-        blue_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL)
+        blue_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change)
         blue_slider.grid(row=6, column=0, sticky='we')
         label_blue = Label(self.root_widgets['frame_mask_image'], text='Limiar do Azul')
         label_blue.grid(row=7, column=0, sticky='w')
 
-        opacity_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=100, orient=HORIZONTAL)
+        opacity_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=100, orient=HORIZONTAL, command=self.on_scale_change)
         opacity_slider.grid(row=8, column=0, sticky='we')
         label_opacity = Label(self.root_widgets['frame_mask_image'], text='Opacidade da Máscara')
         label_opacity.grid(row=9, column=0, sticky='w')
@@ -103,8 +103,23 @@ class Interface:
             'green_slider': green_slider,
             'label_green': label_green,
             'blue_slider': blue_slider,
-            'label_blue': label_blue
+            'label_blue': label_blue,
+            'opacity_slider': opacity_slider,
+            'label_opacity': label_opacity
         }
+
+    def on_scale_change(self, arg):
+        rgb_threshold = {
+            'r': self.mask_widgets['red_slider'].get(),
+            'g': self.mask_widgets['green_slider'].get(),
+            'b': self.mask_widgets['blue_slider'].get(),
+            'a': self.mask_widgets['opacity_slider'].get()
+        }
+
+        print(rgb_threshold)
+
+
+
 
 
 
