@@ -23,6 +23,7 @@
 `python3` - Linguagem de Programação  
 `pip install click` - Utilizado para o CLI  
 `pip install opencv-python` - Utilizado para o Processamento de Imagens  
+`pip install Pillow` - Utilizado para a integração da Interface Gráfica com o OpenCv  
 
 ##### Exemplos de Execução  
 `python main.py -f "./tests/basicTest/basicTest1.png"`  
