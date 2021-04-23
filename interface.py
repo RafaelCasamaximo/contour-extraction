@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 from scrollableImage import ScrollableImage   
+from analisaImagem import AnalisaImagem
 
 class Interface:
     def __init__(self):
@@ -75,48 +76,65 @@ class Interface:
         label_fotografia.grid(row=1, column=0, sticky='NW', padx=10, pady=10)
 
         #Sliders de Treshold para RGB para criar a máscara
-        red_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change)
-        red_slider.grid(row=2, column=0, sticky='we')
-        label_red = Label(self.root_widgets['frame_mask_image'], text='Limiar do Vermelho')
-        label_red.grid(row=3, column=0, sticky='w')
+        min_hue = Scale(self.root_widgets['frame_mask_image'], from_=0, to=180, orient=HORIZONTAL, command=self.on_scale_change, label='Min Hue')
+        min_hue.grid(row=2, column=0, sticky='we')
 
-        green_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, label='teste', command=self.on_scale_change)
-        green_slider.grid(row=4, column=0, sticky='we')
-        label_green = Label(self.root_widgets['frame_mask_image'], text='Limiar do Verde')
-        label_green.grid(row=5, column=0, sticky='w')
+        max_hue = Scale(self.root_widgets['frame_mask_image'], from_=0, to=180, orient=HORIZONTAL, command=self.on_scale_change, label='Max Hue')
+        max_hue.grid(row=3, column=0, sticky='we')
+
+        min_satur = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change, label='Min Satur.')
+        min_satur.grid(row=4, column=0, sticky='we')
+
+        max_satur = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change, label='Max Satur.')
+        max_satur.grid(row=5, column=0, sticky='we')
+
+        min_value = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change, label='Min Value')
+        min_value.grid(row=6, column=0, sticky='we')
+
+        max_value = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change, label='Max Value')
+        max_value.grid(row=7, column=0, sticky='we')
+
+        opacity = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change, label='Opacity')
+        opacity.grid(row=8, column=0, sticky='we')
+
+
         
-        blue_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change)
-        blue_slider.grid(row=6, column=0, sticky='we')
-        label_blue = Label(self.root_widgets['frame_mask_image'], text='Limiar do Azul')
-        label_blue.grid(row=7, column=0, sticky='w')
 
-        opacity_slider = Scale(self.root_widgets['frame_mask_image'], from_=0, to=100, orient=HORIZONTAL, command=self.on_scale_change)
-        opacity_slider.grid(row=8, column=0, sticky='we')
-        label_opacity = Label(self.root_widgets['frame_mask_image'], text='Opacidade da Máscara')
-        label_opacity.grid(row=9, column=0, sticky='w')
 
         self.mask_widgets = {
             'imagem_arquivo_fotografia': imagem_arquivo_fotografia,
             'label_fotografia': label_fotografia,
-            'red_slider': red_slider,
-            'label_red': label_red,
-            'green_slider': green_slider,
-            'label_green': label_green,
-            'blue_slider': blue_slider,
-            'label_blue': label_blue,
-            'opacity_slider': opacity_slider,
-            'label_opacity': label_opacity
+            'min_hue': min_hue,
+            'max_hue': max_hue,
+            'min_satur': min_satur,
+            'max_satur': max_satur,
+            'min_value': min_value,
+            'max_value': max_value,
+            'opacity': opacity,
         }
 
     def on_scale_change(self, arg):
-        rgb_threshold = {
-            'r': self.mask_widgets['red_slider'].get(),
-            'g': self.mask_widgets['green_slider'].get(),
-            'b': self.mask_widgets['blue_slider'].get(),
-            'a': self.mask_widgets['opacity_slider'].get()
+        hsva_threshold = {
+            'min_hue': self.mask_widgets['min_hue'].get(),
+            'max_hue': self.mask_widgets['max_hue'].get(),
+            'min_satur': self.mask_widgets['min_satur'].get(),
+            'max_satur': self.mask_widgets['max_satur'].get(),
+            'min_value': self.mask_widgets['min_value'].get(),
+            'max_value': self.mask_widgets['max_value'].get(),
+            'opacity': self.mask_widgets['opacity'].get(),
         }
 
-        print(rgb_threshold)
+        imagem_arquivo_fotografia = AnalisaImagem.cria_mascara(hsva_threshold, self.root.filename)
+
+        label_fotografia = ScrollableImage(self.root_widgets['frame_mask_image'], image=imagem_arquivo_fotografia, scrollbarwidth=6, width=500, height=500)
+        label_fotografia = Label(self.root_widgets['frame_mask_image'], image=imagem_arquivo_fotografia)
+        label_fotografia.grid(row=1, column=0, sticky='NW', padx=10, pady=10)
+
+        self.mask_widgets.update({
+            'imagem_arquivo_fotografia': imagem_arquivo_fotografia,
+            'label_fotografia': label_fotografia,
+        })
+        print(hsva_threshold)
 
 
 
