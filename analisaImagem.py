@@ -22,7 +22,9 @@ class AnalisaImagem:
         #Faz o Threshold
         frame_threshold = cv2.inRange(frame_HSV, min_values, max_values)
 
-        #frame_threshold = cv2.addWeighted(image, alpha, frame_HSV, beta, 0.0)
+        frame_threshold = cv2.cvtColor(frame_threshold, cv2.COLOR_GRAY2BGR)
+        frame_threshold = cv2.bitwise_not(frame_threshold)
+        frame_threshold = cv2.addWeighted(image, beta, frame_threshold, alpha, 0.0)
         
         image = ImageTk.PhotoImage(Image.fromarray(frame_threshold))
 

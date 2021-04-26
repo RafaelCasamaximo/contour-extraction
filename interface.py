@@ -94,11 +94,8 @@ class Interface:
         max_value = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change, label='Max Value')
         max_value.grid(row=7, column=0, sticky='we')
 
-        opacity = Scale(self.root_widgets['frame_mask_image'], from_=0, to=255, orient=HORIZONTAL, command=self.on_scale_change, label='Opacity')
+        opacity = Scale(self.root_widgets['frame_mask_image'], from_=0, to=100, orient=HORIZONTAL, command=self.on_scale_change, label='Opacity')
         opacity.grid(row=8, column=0, sticky='we')
-
-
-        
 
 
         self.mask_widgets = {
@@ -130,11 +127,14 @@ class Interface:
         label_fotografia = Label(self.root_widgets['frame_mask_image'], image=imagem_arquivo_fotografia)
         label_fotografia.grid(row=1, column=0, sticky='NW', padx=10, pady=10)
 
+        self.mask_widgets['imagem_arquivo_fotografia'] = None
+        self.mask_widgets['label_fotografia'] = None
+
         self.mask_widgets.update({
             'imagem_arquivo_fotografia': imagem_arquivo_fotografia,
             'label_fotografia': label_fotografia,
         })
-        print(hsva_threshold)
+
 
 
 
