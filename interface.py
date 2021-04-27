@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog
 from PIL import ImageTk, Image
 from scrollableImage import ScrollableImage   
 from analisaImagem import AnalisaImagem
+import gc
 
 class Interface:
     def __init__(self):
@@ -123,17 +124,16 @@ class Interface:
 
         imagem_arquivo_fotografia = AnalisaImagem.cria_mascara(hsva_threshold, self.root.filename)
 
-        label_fotografia = ScrollableImage(self.root_widgets['frame_mask_image'], image=imagem_arquivo_fotografia, scrollbarwidth=6, width=500, height=500)
+        #label_fotografia = ScrollableImage(self.root_widgets['frame_mask_image'], image=imagem_arquivo_fotografia, scrollbarwidth=6, width=500, height=500)
         label_fotografia = Label(self.root_widgets['frame_mask_image'], image=imagem_arquivo_fotografia)
         label_fotografia.grid(row=1, column=0, sticky='NW', padx=10, pady=10)
-
-        self.mask_widgets['imagem_arquivo_fotografia'] = None
-        self.mask_widgets['label_fotografia'] = None
 
         self.mask_widgets.update({
             'imagem_arquivo_fotografia': imagem_arquivo_fotografia,
             'label_fotografia': label_fotografia,
         })
+
+        gc.collect()
 
 
 
