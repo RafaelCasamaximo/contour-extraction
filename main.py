@@ -14,6 +14,8 @@ from interface import Interface
 Essa parte do código é responsável pelo funcionamento dos orgumentos do programa
 use python main.py --help para ver informações ou use a documentação
 """
+
+
 @click.command()
 @click.option('--figure', '-f', required=True, help='Figure name for contour extraction.')
 @click.option('--output', '-o', help='Output file name for contour export.')
@@ -26,7 +28,7 @@ use python main.py --help para ver informações ou use a documentação
 @click.option('--metadata', '-md', is_flag=True, help='Generates a metadata file as [output]-metada.json showing the configurations and other usefull info about the boundary and the file.')
 @click.option('--graphical', '-gui', is_flag=True, help='Runs the program in the GUI mode (In Development).')
 @click.option('--verbose', '-v', is_flag=True, help='Runs the program with verbosity. Good for debugging.')
-def cli(figure, output, width, height, xoffset, yoffset, matlab, metadata, graphical, verbose):
+def cli(figure, output, width, height, xoffset, yoffset, interval, matlab, metadata, graphical, verbose):
     """A program that get the boundary of a binary-colored figure."""
 
     # Verifica se o path passado como figura é válido e existe. Sai do programa se não foi válido.
