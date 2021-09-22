@@ -1,12 +1,12 @@
-#Biblioteca para comandos do sistema
+# Biblioteca para comandos do sistema
 import os
-#Biblioteca para verificação de paths
+# Biblioteca para verificação de paths
 import ntpath
-#Biblioteca para CLI
+# Biblioteca para CLI
 import click
-#Classe para Processamento de Imagens
+# Classe para Processamento de Imagens
 from processaImagem import ProcessaImagem
-#Classe para a interface gráfica 
+# Classe para a interface gráfica
 from interface import Interface
 
 
@@ -21,6 +21,7 @@ use python main.py --help para ver informações ou use a documentação
 @click.option('--height', '-h', default=-1, help='Max height of boundary set.')
 @click.option('--xoffset', '-xo', default=-1, help='X axis offset from start.')
 @click.option('--yoffset', '-yo', default=-1, help='Y axis offset from start.')
+@click.option('--interval', '-i', default=0, help='Set the interval between each point of the output.')
 @click.option('--matlab', '-m', is_flag=True, help='Convert to matlab boundary.')
 @click.option('--metadata', '-md', is_flag=True, help='Generates a metadata file as [output]-metada.json showing the configurations and other usefull info about the boundary and the file.')
 @click.option('--graphical', '-gui', is_flag=True, help='Runs the program in the GUI mode (In Development).')
@@ -28,36 +29,38 @@ use python main.py --help para ver informações ou use a documentação
 def cli(figure, output, width, height, xoffset, yoffset, matlab, metadata, graphical, verbose):
     """A program that get the boundary of a binary-colored figure."""
 
-    #Verifica se o path passado como figura é válido e existe. Sai do programa se não foi válido.
-    if not os.path.isfile(figure):
+    # Verifica se o path passado como figura é válido e existe. Sai do programa se não foi válido.
+    if not os.path.isfile(figure) and not graphical:
         click.echo('Invalid path for --figure/ -f: ' + figure)
         quit()
-    #Cria um objeto ProcessaImagem, necessário para a realização do algoritmo. O parâmetro figure é o path da figura que irá passar pelo algoritmo.
+    # Cria um objeto ProcessaImagem, necessário para a realização do algoritmo. O parâmetro figure é o path da figura que irá passar pelo algoritmo.
     pi = ProcessaImagem(figure)
 
     if graphical:
         gui = Interface()
 
-    #Extrai o contorno da figura e salva nos atributos de ProcessaImagem
+    # Extrai o contorno da figura e salva nos atributos de ProcessaImagem
     pi.extrai_contorno()
-    #Converte para o formato matlab como descrito na descrição do comando
-    if matlab:    
+    # Converte para o formato matlab como descrito na descrição do comando
+    if matlab:
         pi.converte_matlab()
-    #Altera a escala do conjunto de pontos extraidos do contorno. Para cada parâmetro -1 (default), o contorno não é alterado naquele quesito
+    # Altera a escala do conjunto de pontos extraidos do contorno. Para cada parâmetro -1 (default), o contorno não é alterado naquele quesito
     pi.altera_escala(width, height, xoffset, yoffset)
-    #Caso o usuário tenha passado o nome do arquivo desejado, será gerado um novo arquivo de texto com o nome. Caso não seja especificado o nome do arquivo de dados será:
+    # Caso o usuário tenha passado o nome do arquivo desejado, será gerado um novo arquivo de texto com o nome. Caso não seja especificado o nome do arquivo de dados será:
     # [nome-do-arquivo-figure]-data.txt
     if output == None:
         output = path_leaf(figure)[:-4] + '-data.txt'
         outputConfig = path_leaf(figure)[:-4] + '-metadata.json'
-    #Calcula a área
+    # Calcula a área
     pi.calcula_area()
-    #Cria um arquivo de configuração quando exporta o txt mostrando informações uteis sobre o arquivo
+    # Cria um arquivo de configuração quando exporta o txt mostrando informações uteis sobre o arquivo
     pi.exporta_metadata(outputConfig, width, height, xoffset, yoffset)
-    #Cria um novo arquivo com o output
+    # Cria um novo arquivo com o output
     pi.exporta_contorno(output)
 
-#Função responsável pela extração do nome do arquivo dentro de um path
+# Função responsável pela extração do nome do arquivo dentro de um path
+
+
 def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
