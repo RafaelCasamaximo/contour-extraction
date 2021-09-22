@@ -86,11 +86,11 @@ class ProcessaImagem:
     Função responsável por exportar o resultado da extração de contorno em um arquivo path
     """
 
-    def exporta_contorno(self, path):
+    def exporta_contorno(self, path, interval):
         try:
             with open(path, "w") as dataFile:
                 resultado = self.converte_pixelArray_to_string(
-                    self.boundary, 0)
+                    self.boundary, interval)
                 dataFile.write(resultado)
         except:
             print('Path does not exist for boundary export')
@@ -143,8 +143,14 @@ class ProcessaImagem:
     def converte_pixelArray_to_string(self, array, intervalo):
         intervalo = intervalo
         content = ''
-        for element in array:
+        # for element in array:
+        #     content = content + str(element.x) + " " + str(element.y) + "\n"
+        i = 0
+        while i < len(array):
+            element = array[i]
             content = content + str(element.x) + " " + str(element.y) + "\n"
+            i += intervalo + 1
+
         return content
 
     """

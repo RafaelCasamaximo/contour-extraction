@@ -58,7 +58,7 @@ def cli(figure, output, width, height, xoffset, yoffset, interval, matlab, metad
     # Cria um arquivo de configuração quando exporta o txt mostrando informações uteis sobre o arquivo
     pi.exporta_metadata(outputConfig, width, height, xoffset, yoffset)
     # Cria um novo arquivo com o output
-    pi.exporta_contorno(output)
+    pi.exporta_contorno(output, interval)
 
 # Função responsável pela extração do nome do arquivo dentro de um path
 
