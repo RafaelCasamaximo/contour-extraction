@@ -1,0 +1,11 @@
+python main.py -f "./tests/basicTest/basicTest1.png" --matlab
+
+python main.py -f "./tests/basicTest/basicTest2.png" --matlab
+
+python main.py -f "./tests/basicTest/basicTest3.png" --matlab
+
+python main.py -f "./tests/feetTest/feet_mask.png" --matlab
+
+python main.py -f "./tests/flowerTest/flower.png" --matlab
+
+python main.py -f "./tests/pancreasTest/output.png" --matlab

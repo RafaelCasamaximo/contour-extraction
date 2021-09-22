@@ -89,8 +89,9 @@ class ProcessaImagem:
     def exporta_contorno(self, path):
         try:
             with open(path, "w") as dataFile:
-                dataFile.write(
-                    self.converte_pixelArray_to_string(self.boundary))
+                resultado = self.converte_pixelArray_to_string(
+                    self.boundary, 0)
+                dataFile.write(resultado)
         except:
             print('Path does not exist for boundary export')
             return
@@ -140,9 +141,7 @@ class ProcessaImagem:
     """
 
     def converte_pixelArray_to_string(self, array, intervalo):
-        """TODO: Pedro, precisa alterar esse for aqui pra poder pular o intervalo
-        Ao invés de ir para o próximo elemento, vai para o i (atual) + intervalo + 1
-        Caso o intervalo seja 0 (default), vai para i + 1"""
+        intervalo = intervalo
         content = ''
         for element in array:
             content = content + str(element.x) + " " + str(element.y) + "\n"
