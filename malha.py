@@ -10,17 +10,24 @@ from processaMalha import ProcessaMalha
 
 @click.command()
 @click.option('--inputfile', '-f', required=True, help='file name for mesh generation.')
-@click.option('--dx', '-dx', required=True, help='Set the interval between each point on X axis.')
-@click.option('--dy', '-dy', required=True, help='Set the interval between each point on Y axis.')
+@click.option('--dx', '-dx', default=0.0, help='Set the interval between each point on X axis.')
+@click.option('--dy', '-dy', default=0.0, help='Set the interval between each point on Y axis.')
+@click.option('--nx', '-nx', default=0, help='Set the number of nodes on X axis.')
+@click.option('--ny', '-ny', default=0, help='Set the number of nodes on Y axis.')
 @click.option('--output', '-o', help='Output file name for contour export.')
-@click.option('-dftoffset', '-do',is_flag=True, help='Set the offset as the minimum values from input arrays.')
-@click.option('--xoffset', '-xo', default=0, help='X axis offset from start.')
-@click.option('--yoffset', '-yo', default=0, help='Y axis offset from start.')
-@click.option('--verbose', '-v', is_flag=True, help='Runs the program with verbosity. Good for debugging.')
+@click.option('--defaultmin', '-dm', is_flag=True, help='Set the minimum values as default (from input arrays).')
+@click.option('--xmin', '-xm', default=0, help='X axis minimum value.')
+@click.option('--ymin', '-ym', default=0, help='Y axis minimum value.')
 
-def cli(inputfile, output, dx, dy, xoffset, yoffset, dftoffset, verbose):
+def cli(inputfile, output, dx, dy, nx, ny, xmin, ymin, defaultmin):
     if not os.path.isfile(inputfile):
         click.echo('Invalid path for --input/ -f: ' + inputfile)
+        quit()
+    if dx == 0 and nx == 0:
+        click.echo('Missing argument --dx ou --nx')
+        quit()
+    if dy == 0 and ny == 0:
+        click.echo('Missing argument --dy ou --ny')
         quit()
     xarray = []
     yarray = []
@@ -30,7 +37,7 @@ def cli(inputfile, output, dx, dy, xoffset, yoffset, dftoffset, verbose):
         xarray.append(float(aux[0]))
         yarray.append(float(aux[1]))
     f.close()
-    malha = ProcessaMalha(xarray, yarray, dftoffset, xoffset, yoffset, float(dx), float(dy))
+    malha = ProcessaMalha(xarray, yarray, defaultmin, xmin, ymin, int(nx), int(ny), float(dx), float(dy))
     malha.criar_malha()
     if output == None:
         output = path_leaf(inputfile)[:-4] + '-data.txt'
