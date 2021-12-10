@@ -14,12 +14,14 @@ from processaMalha import ProcessaMalha
 @click.option('--dy', '-dy', default=0.0, help='Set the interval between each point on Y axis.')
 @click.option('--nx', '-nx', default=0, help='Set the number of nodes on X axis.')
 @click.option('--ny', '-ny', default=0, help='Set the number of nodes on Y axis.')
+@click.option('--maxdx', '-mx', default=0, help='Set the maximum size of a node on X axis.')
+@click.option('--maxdy', '-my', default=0, help='Set the maximum size of a node on Y axis.')
 @click.option('--output', '-o', help='Output file name for contour export.')
 @click.option('--defaultmin', '-dm', is_flag=True, help='Set the minimum values as default (from input arrays).')
 @click.option('--xmin', '-xm', default=0, help='X axis minimum value.')
 @click.option('--ymin', '-ym', default=0, help='Y axis minimum value.')
 
-def cli(inputfile, output, dx, dy, nx, ny, xmin, ymin, defaultmin):
+def cli(inputfile, output, dx, dy, nx, ny, maxdx, maxdy, xmin, ymin, defaultmin):
     if not os.path.isfile(inputfile):
         click.echo('Invalid path for --input/ -f: ' + inputfile)
         quit()
@@ -41,7 +43,13 @@ def cli(inputfile, output, dx, dy, nx, ny, xmin, ymin, defaultmin):
     malha.criar_malha()
     if output == None:
         output = path_leaf(inputfile)[:-4] + '-data.txt'
-    malha.exporta_coords_malha(output)
+    if maxdx > 0 and maxdy > 0:
+        mesh, vdx, vdy = malha.filter_mesh(maxdx, maxdy)
+        export_point(output, mesh)
+        export_point(output[:-4] + '-dx.txt', vdx)
+        export_point(output[:-4] + '-dy.txt', vdy)
+    else:
+        malha.exporta_coords_malha(output)
 
 
 # Função responsável pela extração do nome do arquivo dentro de um path
@@ -51,6 +59,23 @@ def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
 
+
+#Função para escrever um vetor em um arquivo
+
+def export_point(path, l):
+    try:
+        with open(path, "w") as dataFile:
+            content = ''
+            for i in l:
+                if type(i) is list:
+                    aux = ' '.join([str(elem) for elem in i])
+                else:
+                    aux = str(i)
+                content = content + aux + "\n"
+            dataFile.write(content)
+    except:
+        print('Path does not exist for export')
+        return
 
 """
 Função main para rodar o código do CLI

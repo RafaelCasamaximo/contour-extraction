@@ -1,5 +1,3 @@
-import numpy as np
-
 class ProcessaMalha:
 
     """
@@ -31,11 +29,11 @@ class ProcessaMalha:
         else:
             self.dy = dy
         if nx == 0:
-            self.nx = (max(xarray) - self.xmin)//dx + 1
+            self.nx = int((max(xarray) - self.xmin)//dx) + 1
         else:
             self.nx = nx
         if ny == 0:
-            self.ny = (max(yarray) - self.ymin)//dy + 1
+            self.ny = int((max(yarray) - self.ymin)//dy) + 1
         else:
             self.ny = ny
         self.mesh = []
@@ -163,8 +161,7 @@ class ProcessaMalha:
         content = ''
         content = content + str(self.nx) + " " + str(self.ny) + "\n"
         content = content + str(self.xmin) + " " + str(self.ymin) + "\n"
-        if not isinstance(self.dx, list):
-            content = content + str(self.dx) + " " + str(self.dy) + "\n"
+        content = content + str(self.dx) + " " + str(self.dy) + "\n"
         return content
 
     """
@@ -178,7 +175,7 @@ class ProcessaMalha:
                     self.mesh)
                 dataFile.write(resultado)
         except:
-            print('Path does not exist for boundary export')
+            print('Path does not exist for mesh export')
             return
 
 
@@ -192,13 +189,65 @@ class ProcessaMalha:
         area = 0
         i = 0
         j = 0
-        for index in range(0, (len(self.boundary)) - 1):
-            auxI = self.boundary[index]
-            auxJ = self.boundary[index + 1]
+        for index in range(0, (len(self.mesh)) - 1):
+            auxI = self.mesh[index]
+            auxJ = self.mesh[index + 1]
             area += auxI[1] * auxJ[0] - auxI[0] * auxJ[1]
-        auxI = self.boundary[len(self.boundary) - 1]
-        auxJ = self.boundary[0]
+        auxI = self.mesh[len(self.mesh) - 1]
+        auxJ = self.mesh[0]
         area += auxI[1] * auxJ[0] - auxI[0] * auxJ[1]
         area = area / 2
         return area
+    
+
+    """
+    Retorna a malha em forma de matriz
+    """
+
+    def get_mesh_mat(self):
+        mat = [[0 for col in range(self.nx)] for row in range(self.ny)]
+        for node in self.mesh:
+            j = int((node[0] - self.xmin) // self.dx)
+            i = int((node[1] - self.ymin) // self.dy)
+            mat[i][j] = 1
+        return mat
+
+
+    """
+    Remove da malha linhas e colunas repetitivas
+    """
+
+    def filter_mesh(self, mDx, mDy):
+        mat = self.get_mesh_mat()
+        dx = [self.xmin]
+        dy = [self.ymin]
+        aux = 1
+        for i in range(1, self.ny):
+            if all([x == y for x,y in zip(mat[i - 1], mat[i])]):
+                aux += 1
+                if aux == mDy:
+                    dy.append(dy[-1] + self.dy * aux)
+                    aux = 1
+            else:
+                dy.append(dy[-1] + self.dy * aux)
+                aux = 1
+        for i in range(1, self.nx):
+            col1 = [x[i - 1] for x in mat]
+            col2 = [x[i] for x in mat]
+            if all([x == y for x,y in zip(col1, col2)]):
+                aux += 1
+                if aux == mDx:
+                    dx.append(dx[-1] + self.dx * aux)
+                    aux = 1
+            else:
+                dx.append(dx[-1] + self.dx * aux)
+                aux = 1
+        mesh = []
+        for node in self.mesh:
+            if node[0] in dx and node[1] in dy:
+                mesh.append([node[0],node[1]])
+        if mesh[0][0] != mesh[-1][0] or mesh[0][1] != mesh[-1][1]:
+            mesh.append([node[0],node[1]])
+        return mesh, dx, dy
+    
     
