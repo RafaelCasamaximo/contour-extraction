@@ -18,7 +18,7 @@ def cli(inputfile, output, rangesfile, irregular):
     if not os.path.isfile(inputfile):
         click.echo('Invalid path for --inputfile/ -f: ' + inputfile)
         quit()
-    if not os.path.isfile(inputfile):
+    if not os.path.isfile(rangesfile):
         click.echo('Invalid path for --rangesfile/ -r: ' + inputfile)
         quit()
     xarray = []

@@ -168,10 +168,10 @@ class ProcessaMalhaNIE:
                 auxX = (xpoint - r["xi"]) // r["dx"] * r["dx"] + r["xi"]
                 auxY = (ypoint - r["yi"]) // r["dy"] * r["dy"] + r["yi"]
                 flag = 1
-            elif auxX == r["xi"] and r["yi"] < auxY < r["yf"]:
-                auxY = r["yi"]
+            elif auxX == r["xf"] and r["yi"] < auxY < r["yf"]:
+                auxY = (ypoint - r["yi"]) // r["dy"] * r["dy"] + r["yi"]
             elif r["xi"] < auxX < r["xf"] and auxY == r["yf"]:
-                auxX = r["xf"]
+                auxX = (xpoint - r["xi"]) // r["dx"] * r["dx"] + r["xi"]
         if flag:
             return[auxX, auxY] 
         print("A figura é maior que os limites da malha")
