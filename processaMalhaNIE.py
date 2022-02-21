@@ -1,3 +1,4 @@
+
 class ProcessaMalhaNIE:
 
     """
@@ -25,6 +26,7 @@ class ProcessaMalhaNIE:
     """
 
     def addRange(self, xmin, ymin, xmax, ymax, nx, ny):
+        flag = True
         if len(self.ranges) == 0:
             dx = (xmax - xmin)/(nx - 1)
             dy = (ymax - ymin)/(ny - 1)
@@ -34,21 +36,26 @@ class ProcessaMalhaNIE:
             ymin = (ymin - r["yi"]) // r["dy"] * r["dy"] + r["yi"]
             xmax = (xmax - r["xi"]) // r["dx"] * r["dx"] + r["xi"]
             ymax = (ymax - r["yi"]) // r["dy"] * r["dy"] + r["yi"]
+            for i in self.ranges[1:]:
+                if i["xmin"] <= xmin <= i ["xmax"] or i["xmin"] <= xmax <= i["xmax"] or i["ymin"] <= ymin <= i["ymax"] or i["ymin"] <= ymax <= i["ymax"]:
+                    print("Invalid range due to overlap")
+                    flag = False
             dx = r["dx"]/nx
             dy = r["dy"]/ny
-            nx = int((xmax - xmin)//dx) + 1
-            ny = int((ymax - ymin)//dy) + 1
-        aux = {
-            "nx" : nx,
-            "ny" : ny,
-            "xi" : xmin,
-            "yi" : ymin,
-            "xf" : xmax,
-            "yf" : ymax,
-            "dx" : dx,
-            "dy" : dy
-        }
-        self.ranges.append(aux)
+            nx = round((xmax - xmin)/dx) + 1
+            ny = round((ymax - ymin)/dy) + 1
+        if flag:
+            aux = {
+                "nx" : nx,
+                "ny" : ny,
+                "xi" : xmin,
+                "yi" : ymin,
+                "xf" : xmax,
+                "yf" : ymax,
+                "dx" : dx,
+                "dy" : dy
+            }
+            self.ranges.append(aux)
 
     """
     Obtem os intervalos da malha
