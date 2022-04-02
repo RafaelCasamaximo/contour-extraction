@@ -115,7 +115,7 @@ class ProcessaImagem:
         for i in range(self.yTotal - 1, -1, -1):
             for j in range(self.xTotal):
                 if self.bidimensional_image[i][j] == 255:
-                    pixel = Pixel(i, j, 255)
+                    pixel = Pixel(j, i, 255)
                     return pixel
 
     """
@@ -130,10 +130,10 @@ class ProcessaImagem:
             index = (i + backtrackIndex) % 8
             neighborX = p.x + self.MOORE_OFFSET[index][0]
             neighborY = p.y + self.MOORE_OFFSET[index][1]
-            neighborValue = self.bidimensional_image[neighborX][neighborY]
+            neighborValue = self.bidimensional_image[neighborY][neighborX]
             neighborPixel = Pixel(neighborX, neighborY, neighborValue)
             if neighborPixel.value == 255:
-                self.img[neighborX][neighborY] = [255, 0, 0]
+                self.img[neighborY][neighborX] = [255, 0, 0]
                 return neighborPixel, index - 1
 
     """
@@ -178,11 +178,17 @@ class ProcessaImagem:
     """
 
     def converte_matlab(self):
+        print(self.yTotal)
+        print(self.yTotal - min(self.boundary, key=lambda x: x.y).y)
+        print(self.yTotal - max(self.boundary, key=lambda x: x.y).y)
         for pixel in self.boundary:
-            pixel.x = self.xTotal - pixel.x
-            aux = pixel.y
-            pixel.y = pixel.x
-            pixel.x = aux
+            pixel.y = self.yTotal - pixel.y
+            #aux = pixel.y
+            #pixel.y = pixel.x
+            #pixel.x = aux
+        #aux = self.xTotal
+        #self.xTotal = self.yTotal
+        #self.yTotal = aux
 
     """
     Utiliza um método descrito por Gauss para o cálculo da área de um poligono irregular convexo

@@ -14,6 +14,8 @@ class ProcessaMalha:
     def __init__(self, xarray, yarray, defaultmin, xmin, ymin, nx, ny, dx, dy):
         self.x = xarray
         self.y = yarray
+        self.xmax = max(xarray)
+        self.ymax = max(yarray)
         if(defaultmin):
             self.xmin = min(xarray)
             self.ymin = min(yarray)
@@ -21,19 +23,19 @@ class ProcessaMalha:
             self.xmin = xmin
             self.ymin = ymin
         if dx == 0:
-            self.dx = (max(xarray) - self.xmin)/(nx - 1)
+            self.dx = (self.xmax - self.xmin)/(nx - 1)
         else:
             self.dx = dx
         if dy == 0:
-            self.dy = (max(yarray) - self.ymin)/(ny - 1)
+            self.dy = (self.ymax - self.ymin)/(ny - 1)
         else:
             self.dy = dy
         if nx == 0:
-            self.nx = int((max(xarray) - self.xmin)//dx) + 1
+            self.nx = int((self.xmax - self.xmin)/dx) + 1
         else:
             self.nx = nx
         if ny == 0:
-            self.ny = int((max(yarray) - self.ymin)//dy) + 1
+            self.ny = int((self.ymax - self.ymin)/dy) + 1
         else:
             self.ny = ny
         self.mesh = []
@@ -138,6 +140,15 @@ class ProcessaMalha:
                 self.mesh[-1][1] = point[1]
         elif point[0] != prevpoint[0] or point[1] != prevpoint[1]:
             self.mesh.append(point)
+        
+        aux = max(self.mesh, key = lambda k : k[0])[0]
+        if aux != self.xmax:
+            self.xmax = aux
+            self.nx = int((self.xmax - self.xmin)/self.dx) + 1
+        aux = max(self.mesh, key = lambda k : k[1])[1]
+        if aux != self.ymax:
+            self.ymax = aux
+            self.ny = int((self.ymax - self.ymin)/self.dy) + 1
     
 
     """
@@ -161,6 +172,7 @@ class ProcessaMalha:
         content = ''
         content = content + str(self.nx) + " " + str(self.ny) + "\n"
         content = content + str(self.xmin) + " " + str(self.ymin) + "\n"
+        content = content + str(self.xmax) + " " + str(self.ymax) + "\n"
         content = content + str(self.dx) + " " + str(self.dy) + "\n"
         return content
 
