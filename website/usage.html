@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.14.1/dist/css/uikit.min.css" />   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <nav class="uk-navbar-container" uk-navbar="mode: click">
+        <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+                <li class="#"><a href="index.html">Início</a></li>
+                <li class="uk-active"><a href="usage.html">Utilização</a></li>
+                <li class="#"><a href="citation.html">Citação</a></li>
+                <li class="#"><a href="about.html">Sobre</a></li>
+            </ul>
+        </div>
+        <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+                <li class="uk-active"><a href="https://github.com/RafaelCasamaximo/contour-extraction"><i class="bi bi-github" style="font-size: 2rem;"></i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="uk-container uk-margin-top">
+
+        <div class="uk-card uk-card-primary uk-card-body uk-card-hover">
+            <h3 class="uk-card-title">Download e procedimentos necessários</h3>
+            <dl class="uk-description-list">
+                <dt style="color: white;">Download do Código</dt>
+                <dd>O download de todo o código, os casos de teste e outros arquivos pode ser realizado no <a href="https://github.com/RafaelCasamaximo/contour-extraction">Repositório do Github</a>.</dd>
+                <dt style="color: white;">Linguagem Utilizada</dt>
+                <dd>Em nossa aplicação utilizamos <b>Python</b>, sendo a versão mínima requerida a 3.0.</dd>
+                <dt style="color: white;">Requerimentos</dt>
+                <dd>Todas as bibliotecas necessárias para a execução da GUI e da CLI estão listadas em <code>requirements.txt</code></dd>
+            </dl>
+        </div>
+
+        <br>
+
+        <div class="uk-card uk-card-primary uk-card-body uk-card-hover">
+            <h3 class="uk-card-title">GUI - Filtro HSV</h3>
+            <p> Para a execução da GUI é necessário a execução do comando <code>python3 main.py --graphical --figure .\tests\basicTest\basicTest1.png</code></p>
+            <p> Não existem outros parametros de execução para esse modo.</p>
+            
+        </div>
+
+        <br>
+
+        <div class="uk-card uk-card-primary uk-card-body uk-card-hover">
+            <h3 class="uk-card-title">CLI - Extração de Contorno</h3>
+            <dl class="uk-description-list">
+                <dt style="color: white;">Exemplos de Execução</dt>
+                <dd>
+                    <code>python main.py -f "./tests/basicTest/basicTest1.png"</code>
+                    <code>python main.py -f ./tests/basicTest/basicTest1.png</code>
+                    <code>python main.py --figure //.../tests/basicTest/basicTest1.png</code>
+                </dd>
+                <dt style="color: white;">Parâmetros</dt>
+                <dd>
+                    <code>--help</code> - Parâmetro que mostra todos os outros parâmetros do projeto e suas descrições. <br>
+                    <code>--figure/ -f</code> OBRIGATORIO - Parâmetro de entrada para a figura desejada.<br>
+                    <code>--output/ -o</code> Parâmetro para definir o nome do arquivo de saída. Caso não exista o arquivo será [figure]-data.txt.<br>
+                    <code>--width/ -w</code> - Parâmetro para definir a largura máxima do conjunto de pontos. Caso não seja inserido ou seja -1 o comando será ignorado.<br>
+                    <code>--height/ -h</code> - Parâmetro para definir a altura máxima do conjunto de pontos. Caso não seja inserido ou seja -1 o comando será ignorado.<br>
+                    <code>--xoffset/ -xo</code> - Parâmetro para definir o deslocamento no eixo X (direita) do mínimo valor possivel do conjunto de pontos. Caso não seja inserido ou seja -1 o comando será ignorado.<br>
+                    <code>--yoffset/ -yo</code> - Parâmetro para definir o deslocamento no eixo Y (baixo) do mínimo valor possivel do conjunto de pontos. Caso não seja inserido ou seja -1 o comando será ignorado.<br>
+                    <code>--interval/ -i</code> - Define um intervalo entre cada ponto no output.<br>
+                    <code>--matlab/ -m</code> - Parâmetro para definir se os pontos serão exportados no formato MATLAB, com origem (0, 0) no canto inferior esquerdo.<br>
+                    <code>--metadata/ -md</code> - Parâmetro para exportar um arquivo de metadata contendo as informações executadas no projeto em questão, gerando um arquivo [output/figure]-metadata.json.<br>
+                    <code>--graphical/ -gui</code> EM DESENVOLVIMENTO - Roda o programa com a interface de usuário experimental.<br>
+                    <code>--verbose</code> EM DESENVOLVIMENTO - Parâmetro para habilitar o modo verboso (detalhes de comandos e procedimentos).
+                </dd>
+            </dl>
+            <p>
+            </p>
+        </div>
+
+        <br>
+
+        <div class="uk-card uk-card-primary uk-card-body uk-card-hover">
+            <h3 class="uk-card-title">CLI - Extração de Contorno</h3>
+            <dl class="uk-description-list">
+                <dt style="color: white;">Exemplos de Execução</dt>
+                <dd>
+                    <code>python malha.py -f "./tests/basicTest/basicTest1.png"</code>
+                    <code>python malha.py -f ./tests/basicTest/basicTest1.png</code>
+                    <code>python malha.py --figure //.../tests/basicTest/basicTest1.png</code>
+                </dd>
+                <dt style="color: white;">Parâmetros</dt>
+                <dd>
+                    <code>--help</code> - Parâmetro que mostra todos os outros parâmetros do projeto e suas descrições.<br>
+                    <code>--inputfile/ -f</code> OBRIGATORIO - Parâmetro de entrada para as coordenadas do contorno da figura.<br>
+                    <code>--output/ -o</code> Parâmetro para definir o nome do arquivo de saída. Caso não exista o arquivo será <code>[inputfile]-data.txt</code>.<br>
+                    <code>--xmin/ -xo</code> - Parâmetro para definir o mínimo valor possivel do eixo x na malha. Caso não seja inserido seu valor será 0.<br>
+                    <code>--ymin/ -yo</code> - Parâmetro para definir o mínimo valor possivel do eixo y na malha. Caso não seja inserido seu valor será 0.<br>
+                    <code>--defaultmin/ -dm</code> - Parâmetro para definir que <code>--xmin/ -xo</code> e <code>--ymin/ -yo</code> serão os valores mínimos do conjunto de pontos do contorno da figura.<br>
+                    <code>--dx/ -dx</code> - Tamanho do nó da malha em relação ao eixo x. Caso não seja inserido seu valor será obtido utizando os parâmetros <code>--nx/ -nx</code> e <code>--xmin/ -xo</code>.<br>
+                    <code>--dy/ -dy</code> - Tamanho do nó da malha em relação ao eixo y. Caso não seja inserido seu valor será obtido utizando os parâmetros <code>--ny/ -ny</code> e <code>--ymin/ -yo</code>.<br>
+                    <code>--nx/ -nx</code> - Número de nós da malha em relação ao eixo x. Caso não seja inserido seu valor será obtido utizando os parâmetros <code>--dx/ -dx</code> e <code>--xmin/ -xo</code>.<br>
+                    <code>--ny/ -ny</code> - Número de nós da malha em relação ao eixo y. Caso não seja inserido seu valor será obtido utizando os parâmetros <code>--dy/ -dy</code> e <code>--ymin/ -yo</code>.
+                </dd>
+            </dl>
+            <p>
+            </p>
+        </div>
+    </div>
+
+    <br><br><br>
+
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.14.1/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.14.1/dist/js/uikit-icons.min.js"></script>
+<script src="uikit/dist/js/uikit-icons.min.js"></script>
+
+</body>
+</html>

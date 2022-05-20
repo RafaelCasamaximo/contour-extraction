@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.14.1/dist/css/uikit.min.css" />   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <nav class="uk-navbar-container" uk-navbar="mode: click">
+        <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+                <li class="uk-active"><a href="index.html">Início</a></li>
+                <li class="#"><a href="usage.html">Utilização</a></li>
+                <li class="#"><a href="citation.html">Citação</a></li>
+                <li class="#"><a href="about.html">Sobre</a></li>
+            </ul>
+        </div>
+
+        <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+                <li class="uk-active"><a href="https://github.com/RafaelCasamaximo/contour-extraction"><i class="bi bi-github" style="font-size: 2rem;"></i></a></li>
+            </ul>
+        </div>
+
+    </nav>
+
+    <div class="uk-height-large uk-flex uk-flex-center uk-flex-middle uk-background-cover uk-light" data-src="https://via.placeholder.com/2560x1080.png" uk-img>
+        <h1>Nome do Software</h1>
+    </div>
+
+    <div class="uk-container uk-margin-top">
+
+        <div class="uk-card uk-card-primary uk-card-body uk-card-hover">
+            <h3 class="uk-card-title">O que é Nome do Software?</h3>
+            <p>Em diversas áreas de engenharia, matemática, física, computação e análise de dados
+                é necessário a extração de dados como o contorno, a área ou até mesmo o perimetro de
+                um objeto a partir de uma imagem. As soluções disponíveis atualmente permitem a realização
+                desse processo de maneira semi-automatizada, selecionando manualmente o contorno desejado.
+                Nós percebemos que esse processo poderia ser ainda mais intuitivo, fácil e parametrizável,
+                poupando tempo e esforço. Por conta disso, desenvolvemos <b>Nome do Software</b>, uma solução que permite a extração
+                dos dados necessários a partir de algoritmos de processamento de imagens.</p>
+        </div>
+
+        <br>
+
+        <div class="uk-grid-match uk-child-width-expand@s uk-text-center" uk-grid uk-height-match="row: false">
+            <div>
+                <div class="uk-card uk-card-primary uk-card-body uk-card-hover">
+                    <h3 class="uk-card-title"><i class="bi bi-pencil-square" style="font-size: 2rem;"></i></h3>
+                    <h3 class="uk-card-title">Filtro HSV</h3>
+                    <p>GUI (Em desenvolvimento) para a binarização de imagens a partir de limiares HSV utilizando da biblioteca OpenCv.
+                        Dessa forma é possível isolar e exportar o objeto que deseja na imagem de forma automatizada em formato PNG.
+                        Com essa ferramenta voce possui uma prévia do resultado final durante o procedimento e não precisa
+                        selecionar manualmente os pontos.
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-primary uk-card-body uk-card-hover">
+                    <h3 class="uk-card-title"><i class="bi bi-bounding-box" style="font-size: 2rem;"></i></span></h3>
+                    <h3 class="uk-card-title">Extração de Contorno</h3>
+                    <p>CLI para a extração de contornos e metadados de imagens binárias
+                        utilizando do algoritmo Moore's Neighborhood, permitindo a exportação e importação em outras
+                        ferramentas de maneira facilitada, como o Matlab e o Octave. Nosso CLI também conta com a
+                        parametrização de intervalos, escala e deslocamento.
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-primary uk-card-body uk-card-hover">
+                    <h3 class="uk-card-title"><i class="bi bi-border-inner" style="font-size: 2rem;"></i></span></h3>
+                    <h3 class="uk-card-title">Construção de Malhas</h3>
+                    <p>CLI para a construção das malhas interiores ao objeto selecionado, permitindo a seleção e
+                        parametrização dos pontos internos ao contorno e também do nível de refinamento a partir de
+                        retangulos. A CLI também conta com a exportação facilitada dos dados e metadados para outras
+                        ferramentas, como Matlab e Octave.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br><br><br>
+
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.14.1/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.14.1/dist/js/uikit-icons.min.js"></script>
+<script src="uikit/dist/js/uikit-icons.min.js"></script>
+
+</body>
+</html>
