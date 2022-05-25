@@ -11,16 +11,18 @@ class ProcessaMalha:
     mesh é onde as coordenadas dos nós da malha gerada serão armazenadas
     """
 
-    def __init__(self, xarray, yarray, defaultmin, xmin, ymin, nx, ny, dx, dy):
+    def __init__(self, xarray, yarray, xmin, ymin, nx, ny, dx, dy):
         self.x = xarray
         self.y = yarray
         self.xmax = max(xarray)
         self.ymax = max(yarray)
-        if(defaultmin):
-            self.xmin = min(xarray)
-            self.ymin = min(yarray)
+        if(xmin != 0):
+            self.xmin = min(xarray)   
         else:
             self.xmin = xmin
+        if(ymin != 0):
+            self.ymin = min(yarray)   
+        else:
             self.ymin = ymin
         if dx == 0:
             self.dx = (self.xmax - self.xmin)/(nx - 1)
@@ -223,43 +225,5 @@ class ProcessaMalha:
             i = int((node[1] - self.ymin) // self.dy)
             mat[i][j] = 1
         return mat
-
-
-    """
-    Remove da malha linhas e colunas repetitivas
-    """
-
-    def filter_mesh(self, mDx, mDy):
-        mat = self.get_mesh_mat()
-        dx = [self.xmin]
-        dy = [self.ymin]
-        aux = 1
-        for i in range(1, self.ny):
-            if all([x == y for x,y in zip(mat[i - 1], mat[i])]):
-                aux += 1
-                if aux == mDy:
-                    dy.append(dy[-1] + self.dy * aux)
-                    aux = 1
-            else:
-                dy.append(dy[-1] + self.dy * aux)
-                aux = 1
-        for i in range(1, self.nx):
-            col1 = [x[i - 1] for x in mat]
-            col2 = [x[i] for x in mat]
-            if all([x == y for x,y in zip(col1, col2)]):
-                aux += 1
-                if aux == mDx:
-                    dx.append(dx[-1] + self.dx * aux)
-                    aux = 1
-            else:
-                dx.append(dx[-1] + self.dx * aux)
-                aux = 1
-        mesh = []
-        for node in self.mesh:
-            if node[0] in dx and node[1] in dy:
-                mesh.append([node[0],node[1]])
-        if mesh[0][0] != mesh[-1][0] or mesh[0][1] != mesh[-1][1]:
-            mesh.append([node[0],node[1]])
-        return mesh, dx, dy
     
     

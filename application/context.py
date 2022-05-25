@@ -17,7 +17,7 @@ use python main.py --help para ver informações ou use a documentação
 
 
 @click.command()
-@click.option('--figure', '-f', required=True, help='Figure name for contour extraction.')
+@click.option('--figure', '-f', help='Figure name for contour extraction.')
 @click.option('--output', '-o', help='Output file name for contour export.')
 @click.option('--width', '-w', default=-1, help='Max width of boundary set.')
 @click.option('--height', '-h', default=-1, help='Max height of boundary set.')
@@ -31,15 +31,18 @@ use python main.py --help para ver informações ou use a documentação
 def cli(figure, output, width, height, xoffset, yoffset, interval, matlab, metadata, graphical, verbose):
     """A program that get the boundary of a binary-colored figure."""
 
+    if graphical:
+        gui = Interface()
+
     # Verifica se o path passado como figura é válido e existe. Sai do programa se não foi válido.
-    if not os.path.isfile(figure) and not graphical:
+    if figure != None:
+        click.echo('--figure/ -f: required' + figure)
+        quit()
+    if not os.path.isfile(figure):
         click.echo('Invalid path for --figure/ -f: ' + figure)
         quit()
     # Cria um objeto ProcessaImagem, necessário para a realização do algoritmo. O parâmetro figure é o path da figura que irá passar pelo algoritmo.
     pi = ProcessaImagem(figure)
-
-    if graphical:
-        gui = Interface()
 
     # Extrai o contorno da figura e salva nos atributos de ProcessaImagem
     pi.extrai_contorno()

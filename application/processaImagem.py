@@ -159,16 +159,16 @@ class ProcessaImagem:
     """
 
     def altera_escala(self, width, height, startXOffset, startYOffset):
-        widthCoef = self.xTotal / width
-        heightCoef = self.yTotal / height
+        widthCoef = width / self.xTotal
+        heightCoef = height / self.yTotal
 
         for pixel in self.boundary:
             if width != -1:
-                pixel.x = (pixel.x / widthCoef)
+                pixel.x = pixel.x * widthCoef
             if startXOffset != -1:
                 pixel.x = pixel.x + startXOffset
             if height != -1:
-                pixel.y = (pixel.y / heightCoef)
+                pixel.y = pixel.y * heightCoef
             if startYOffset != -1:
                 pixel.y = pixel.y + startYOffset
 
