@@ -16,11 +16,11 @@ class ProcessaMalha:
         self.y = yarray
         self.xmax = max(xarray)
         self.ymax = max(yarray)
-        if(xmin != 0):
+        if(xmin == None):
             self.xmin = min(xarray)   
         else:
             self.xmin = xmin
-        if(ymin != 0):
+        if(ymin == None):
             self.ymin = min(yarray)   
         else:
             self.ymin = ymin

@@ -15,10 +15,12 @@ from processaMalha import ProcessaMalha
 @click.option('--nx', '-nx', default=0, help='Set the number of nodes on X axis.')
 @click.option('--ny', '-ny', default=0, help='Set the number of nodes on Y axis.')
 @click.option('--output', '-o', help='Output file name for contour export.')
-@click.option('--xmin', '-xm', default=0, help='X axis minimum value.')
-@click.option('--ymin', '-ym', default=0, help='Y axis minimum value.')
+@click.option('--xmin', '-xm', default=None, help='X axis minimum value.')
+@click.option('--ymin', '-ym', default=None, help='Y axis minimum value.')
 
 def cli(inputfile, output, dx, dy, nx, ny, xmin, ymin):
+    """A program that generates a mesh using the context output."""
+
     if not os.path.isfile(inputfile):
         click.echo('Invalid path for --input/ -f: ' + inputfile)
         quit()

@@ -11,14 +11,16 @@ from processaMalhaNIE import ProcessaMalhaNIE
 @click.command()
 @click.option('--inputfile', '-f', required=True, help='File name for mesh generation.')
 @click.option('--output', '-o', help='Output file name for contour export.')
-@click.option('--rangesfile', '-r', required=True, help='File name for critical regions of the mesh.')
-@click.option('--irregular', '-ir', is_flag=True, help='Set the mesh mode as irregular')
+@click.option('--rangefile', '-r', required=True, help='File name for critical regions of the mesh.')
+@click.option('--sparse', '-s', is_flag=True, help='Set the mesh mode as sparse')
 
-def cli(inputfile, output, rangesfile, irregular):
+def cli(inputfile, output, rangefile, sparse):
+    """A program that generates a not equally spaced mesh using the context output."""
+
     if not os.path.isfile(inputfile):
         click.echo('Invalid path for --inputfile/ -f: ' + inputfile)
         quit()
-    if not os.path.isfile(rangesfile):
+    if not os.path.isfile(rangefile):
         click.echo('Invalid path for --rangesfile/ -r: ' + inputfile)
         quit()
     xarray = []
@@ -30,7 +32,7 @@ def cli(inputfile, output, rangesfile, irregular):
         yarray.append(float(aux[1]))
     f.close()
     malha = ProcessaMalhaNIE(xarray, yarray)
-    r = open(rangesfile, 'r')
+    r = open(rangefile, 'r')
     for line in r.readlines():
         aux = line.split()
         nx = int(aux[0])
@@ -55,7 +57,7 @@ def cli(inputfile, output, rangesfile, irregular):
     r.close()
     if output == None:
         output = path_leaf(inputfile)[:-4] + '-data.txt'
-    if irregular:
+    if sparse:
         malha.criar_malha_irregular()
         malha.export_ranges(output[:-4] + '-ranges.txt')
     else:

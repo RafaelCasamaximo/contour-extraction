@@ -27,16 +27,15 @@ use python main.py --help para ver informações ou use a documentação
 @click.option('--matlab', '-m', is_flag=True, help='Convert to matlab boundary.')
 @click.option('--metadata', '-md', is_flag=True, help='Generates a metadata file as [output]-metada.json showing the configurations and other usefull info about the boundary and the file.')
 @click.option('--graphical', '-gui', is_flag=True, help='Runs the program in the GUI mode (In Development).')
-@click.option('--verbose', '-v', is_flag=True, help='Runs the program with verbosity. Good for debugging.')
-def cli(figure, output, width, height, xoffset, yoffset, interval, matlab, metadata, graphical, verbose):
+def cli(figure, output, width, height, xoffset, yoffset, interval, matlab, metadata, graphical):
     """A program that get the boundary of a binary-colored figure."""
 
     if graphical:
         gui = Interface()
 
     # Verifica se o path passado como figura é válido e existe. Sai do programa se não foi válido.
-    if figure != None:
-        click.echo('--figure/ -f: required' + figure)
+    if figure == None:
+        click.echo('--figure/ -f: required')
         quit()
     if not os.path.isfile(figure):
         click.echo('Invalid path for --figure/ -f: ' + figure)
@@ -58,8 +57,9 @@ def cli(figure, output, width, height, xoffset, yoffset, interval, matlab, metad
         outputConfig = path_leaf(figure)[:-4] + '-metadata.json'
     # Calcula a área
     pi.calcula_area()
-    # Cria um arquivo de configuração quando exporta o txt mostrando informações uteis sobre o arquivo
-    pi.exporta_metadata(outputConfig, width, height, xoffset, yoffset)
+    if metadata:
+        # Cria um arquivo de configuração quando exporta o txt mostrando informações uteis sobre o arquivo
+        pi.exporta_metadata(outputConfig, width, height, xoffset, yoffset)
     # Cria um novo arquivo com o output
     pi.exporta_contorno(output, interval)
 
