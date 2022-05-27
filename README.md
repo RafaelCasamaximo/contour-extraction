@@ -37,15 +37,15 @@
 ##### Flags de `contextNESMesh.py`
 `--help` - Parâmetro que mostra todos os outros parâmetros do projeto e suas descrições.  
 `--inputfile/ -f` **OBRIGATORIO** - Parâmetro de entrada para as coordenadas do contorno da figura.  
-`--output/ -o` Parâmetro para definir o nome do arquivo de saída. Caso não exista o arquivo será `[inputfile]-data.txt`.
-`--rangefile/ -f` **OBRIGATORIO** - Parâmetro de path para arquivo contendo definições de contrução da malha.
-    Cada linha do arquivo informa parâmetros para uma região da malha;
-    A linha deve estar no formato: `nx ny xmin ymin xmax ymax`;
-    Os valores `nx/ny` são os números de nós em cada eixo;
-    `xmin/xmin` são os valores mínimos da região para cada eixo. Caso o valor `min` seja informado, será considerado o valor mínimo das coordenadas do contorno;
-    `xmax/ymax` são os valore máximos da região para cada eixo. Caso o valor `min` seja informado, será considerado o valor máximo das coordenadas do contorno;
-    A primeira região deve conter a malha inteira, e as demais subregiões;
-`--sparse/ -s` - Parâmetro para definir se a malha gerada será esparsa, onde cada subregião formará uma submalha. Caso essa opção não seja selecionada, nós com valores de x ou y dentro dos limites de uma subregião terão seu tamanho ajustados para manter a consitência da malha.
+`--output/ -o` Parâmetro para definir o nome do arquivo de saída. Caso não exista o arquivo será `[inputfile]-data.txt`.  
+`--rangefile/ -f` **OBRIGATORIO** - Parâmetro de path para arquivo contendo definições de contrução da malha.  
+    Cada linha do arquivo informa parâmetros para uma região da malha;  
+    A linha deve estar no formato: `nx ny xmin ymin xmax ymax`;  
+    Os valores `nx/ny` são os números de nós em cada eixo;  
+    `xmin/xmin` são os valores mínimos da região para cada eixo. Caso o valor `min` seja informado, será considerado o valor mínimo das coordenadas do contorno;  
+    `xmax/ymax` são os valore máximos da região para cada eixo. Caso o valor `min` seja informado, será considerado o valor máximo das coordenadas do contorno;  
+    A primeira região deve conter a malha inteira, e as demais subregiões;  
+`--sparse/ -s` - Parâmetro para definir se a malha gerada será esparsa, onde cada subregião formará uma submalha. Caso essa opção não seja selecionada, nós com valores de x ou y dentro dos limites de uma subregião terão seu tamanho ajustados para manter a consitência da malha.  
 
 ##### Dependências  
 `python3` - Linguagem de Programação  
