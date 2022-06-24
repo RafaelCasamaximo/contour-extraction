@@ -45,7 +45,7 @@
     - `xmin/xmin` são os valores mínimos da região para cada eixo. Caso o valor `min` seja informado, será considerado o valor mínimo das coordenadas do contorno;  
     - `xmax/ymax` são os valore máximos da região para cada eixo. Caso o valor `min` seja informado, será considerado o valor máximo das coordenadas do contorno;  
     - A primeira região deve conter a malha inteira, e as demais subregiões;  
-- `--sparse/ -s` - Parâmetro para definir se a malha gerada será esparsa, onde cada subregião formará uma submalha. Caso essa opção não seja selecionada, nós com valores de x ou y dentro dos limites de uma subregião terão seu tamanho ajustados para manter a consitência da malha.  
+- `--adapt/ -adapt` - Caso essa opção seja selecionada, nós com valores de x ou y dentro dos limites de uma subregião terão seu tamanho ajustados para manter a consitência da malha. Caso não seja selecionada, cada subregião formará uma submalha. 
 
 ##### Dependências  
 - `python3` - Linguagem de Programação  

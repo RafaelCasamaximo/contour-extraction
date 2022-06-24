@@ -1,5 +1,5 @@
 
-class ProcessaMalhaNIE:
+class ProcessaMalhaEsparsa:
 
     """
     Constructor da classe ProcessaMalha
@@ -123,7 +123,7 @@ class ProcessaMalhaNIE:
     e removendo nós irrelevantes.
     """
 
-    def criar_malha(self):
+    def criar_malha_adaptada(self):
         self.setIntervals()
         self.mesh = []
         prevpoint = [self.getXNode(self.x[0]), self.getYNode(self.y[0])] 
@@ -191,7 +191,7 @@ class ProcessaMalhaNIE:
     e removendo nós irrelevantes.
     """
 
-    def criar_malha_irregular(self):
+    def criar_malha(self):
         self.mesh = []
         prevpoint = self.getNode(self.x[0], self.y[0]) 
         self.mesh.append(prevpoint)

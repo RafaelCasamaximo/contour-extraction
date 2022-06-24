@@ -55,6 +55,8 @@ def cli(figure, output, width, height, xoffset, yoffset, interval, matlab, metad
     if output == None:
         output = path_leaf(figure)[:-4] + '-data.txt'
         outputConfig = path_leaf(figure)[:-4] + '-metadata.json'
+    else:
+        outputConfig = output[:-4] + '-metadata.json'
     # Calcula a área
     pi.calcula_area()
     if metadata:

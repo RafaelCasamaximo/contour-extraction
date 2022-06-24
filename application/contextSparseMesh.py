@@ -5,16 +5,16 @@ import ntpath
 # Biblioteca para CLI
 import click
 
-from processaMalhaNIE import ProcessaMalhaNIE
+from processaMalhaEsparsa import ProcessaMalhaEsparsa
 
 
 @click.command()
 @click.option('--inputfile', '-f', required=True, help='File name for mesh generation.')
 @click.option('--output', '-o', help='Output file name for contour export.')
 @click.option('--rangefile', '-r', required=True, help='File name for critical regions of the mesh.')
-@click.option('--sparse', '-s', is_flag=True, help='Set the mesh mode as sparse')
+@click.option('--adapt', '-adapt', is_flag=True, help='Set the mesh mode as adapt')
 
-def cli(inputfile, output, rangefile, sparse):
+def cli(inputfile, output, rangefile, adapt):
     """A program that generates a not equally spaced mesh using the context output."""
 
     if not os.path.isfile(inputfile):
@@ -31,7 +31,7 @@ def cli(inputfile, output, rangefile, sparse):
         xarray.append(float(aux[0]))
         yarray.append(float(aux[1]))
     f.close()
-    malha = ProcessaMalhaNIE(xarray, yarray)
+    malha = ProcessaMalhaEsparsa(xarray, yarray)
     r = open(rangefile, 'r')
     for line in r.readlines():
         aux = line.split()
@@ -57,13 +57,13 @@ def cli(inputfile, output, rangefile, sparse):
     r.close()
     if output == None:
         output = path_leaf(inputfile)[:-4] + '-data.txt'
-    if sparse:
-        malha.criar_malha_irregular()
-        malha.export_ranges(output[:-4] + '-ranges.txt')
-    else:
-        malha.criar_malha()
+    if adapt:
+        malha.criar_malha_adaptada()
         export_point(output[:-4] + '-dx.txt',  malha.dx)
         export_point(output[:-4] + '-dy.txt',  malha.dy)
+    else:
+        malha.criar_malha()
+        malha.export_ranges(output[:-4] + '-ranges.txt')
     export_point(output, malha.mesh)
 
 
