@@ -15,10 +15,11 @@ from processaMalha import ProcessaMalha
 @click.option('--nx', '-nx', default=0, help='Set the number of nodes on X axis.')
 @click.option('--ny', '-ny', default=0, help='Set the number of nodes on Y axis.')
 @click.option('--output', '-o', help='Output file name for contour export.')
+@click.option('--anticw', '-acw', is_flag=True, help='Required when the countour in inputfile is anti-clockwise.')
 @click.option('--xmin', '-xm', default=None, help='X axis minimum value.')
 @click.option('--ymin', '-ym', default=None, help='Y axis minimum value.')
 
-def cli(inputfile, output, dx, dy, nx, ny, xmin, ymin):
+def cli(inputfile, output, dx, dy, nx, ny, xmin, ymin, anticw):
     """A program that generates a mesh using the context output."""
 
     if not os.path.isfile(inputfile):
@@ -38,7 +39,7 @@ def cli(inputfile, output, dx, dy, nx, ny, xmin, ymin):
         xarray.append(float(aux[0]))
         yarray.append(float(aux[1]))
     f.close()
-    malha = ProcessaMalha(xarray, yarray, xmin, ymin, int(nx), int(ny), float(dx), float(dy))
+    malha = ProcessaMalha(xarray, yarray, xmin, ymin, int(nx), int(ny), float(dx), float(dy), anticw)
     malha.criar_malha()
     if output == None:
         output = path_leaf(inputfile)[:-4] + '-data.txt'

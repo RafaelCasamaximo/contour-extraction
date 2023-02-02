@@ -11,9 +11,13 @@ class ProcessaMalha:
     mesh é onde as coordenadas dos nós da malha gerada serão armazenadas
     """
 
-    def __init__(self, xarray, yarray, xmin, ymin, nx, ny, dx, dy):
-        self.x = xarray
-        self.y = yarray
+    def __init__(self, xarray, yarray, xmin, ymin, nx, ny, dx, dy, anticw):
+        if anticw:
+            self.x = xarray[::-1]
+            self.y = yarray[::-1]
+        else:
+            self.x = xarray
+            self.y = yarray
         self.xmax = max(xarray)
         self.ymax = max(yarray)
         if(xmin == None):
@@ -112,14 +116,22 @@ class ProcessaMalha:
         self.mesh.append(prevpoint)
         flagx = 0
         flagy = 0
+        dirx = prevpoint[0] > self.x[-2]
+        diry = prevpoint[1] > self.y[-2]
         tam = len(self.x)
         for i in range(1,tam):
             point = self.getNode(self.x[i], self.y[i])
             if point[0] != prevpoint[0] or point[1] != prevpoint[1]:
-                if flagx and point[1] == prevpoint[1]:
+                if flagx and point[1] == prevpoint[1] and ((point[0] > prevpoint[0]) != diry):
                     self.mesh[-1][0] = point[0]
                     self.mesh[-1][1] = point[1]
-                elif flagy and point[0] == prevpoint[0]:
+                elif flagy and point[0] == prevpoint[0] and ((point[1] > prevpoint[1]) == dirx):
+                    self.mesh[-1][0] = point[0]
+                    self.mesh[-1][1] = point[1]
+                elif flagy and point[1] == prevpoint[1] and ((point[0] > prevpoint[0]) != dirx):
+                    self.mesh[-1][0] = point[0]
+                    self.mesh[-1][1] = point[1]
+                elif flagx and point[0] == prevpoint[0] and ((point[1] > prevpoint[1]) != diry):
                     self.mesh[-1][0] = point[0]
                     self.mesh[-1][1] = point[1]
                 else:
@@ -130,17 +142,11 @@ class ProcessaMalha:
                     flagx = 1
                 elif point[1] == self.mesh[-2][1]:
                     flagy = 1
+                dirx = point[0] > self.mesh[-2][0]
+                diry = point[1] > self.mesh[-2][1]
                 prevpoint = point
         point = self.mesh[0]
-        if flagx:
-            if point[1] == prevpoint[1]:
-                self.mesh[-1][0] = point[0]
-                self.mesh[-1][1] = point[1]
-        elif flagy:
-            if point[0] == prevpoint[0]:
-                self.mesh[-1][0] = point[0]
-                self.mesh[-1][1] = point[1]
-        elif point[0] != prevpoint[0] or point[1] != prevpoint[1]:
+        if point[0] != prevpoint[0] or point[1] != prevpoint[1]:
             self.mesh.append(point)
         
         aux = max(self.mesh, key = lambda k : k[0])[0]

@@ -1,4 +1,7 @@
 
+from ast import Break
+
+
 class ProcessaMalhaEsparsa:
 
     """
@@ -12,9 +15,13 @@ class ProcessaMalhaEsparsa:
     mesh é onde as coordenadas dos nós da malha gerada serão armazenadas
     """
 
-    def __init__(self, xarray, yarray):
-        self.x = xarray
-        self.y = yarray
+    def __init__(self, xarray, yarray, anticw):
+        if anticw:
+            self.x = xarray[::-1]
+            self.y = yarray[::-1]
+        else:
+            self.x = xarray
+            self.y = yarray
         self.mesh = []
         self.ranges = []
         self.dx = []
@@ -40,8 +47,8 @@ class ProcessaMalhaEsparsa:
                 if i["xmin"] <= xmin <= i ["xmax"] or i["xmin"] <= xmax <= i["xmax"] or i["ymin"] <= ymin <= i["ymax"] or i["ymin"] <= ymax <= i["ymax"]:
                     print("Invalid range due to overlap")
                     flag = False
-            dx = r["dx"]/nx
-            dy = r["dy"]/ny
+            dx = r["dx"]/(2**nx)
+            dy = r["dy"]/(2**ny)
             nx = round((xmax - xmin)/dx) + 1
             ny = round((ymax - ymin)/dy) + 1
         if flag:
@@ -130,14 +137,22 @@ class ProcessaMalhaEsparsa:
         self.mesh.append(prevpoint)
         flagx = 0
         flagy = 0
+        dirx = prevpoint[0] > self.x[-2]
+        diry = prevpoint[1] > self.y[-2]
         tam = len(self.x)
         for i in range(1,tam):
             point = [self.getXNode(self.x[i]), self.getYNode(self.y[i])]
             if point[0] != prevpoint[0] or point[1] != prevpoint[1]:
-                if flagx and point[1] == prevpoint[1]:
+                if flagx and point[1] == prevpoint[1] and ((point[0] > prevpoint[0]) != diry):
                     self.mesh[-1][0] = point[0]
                     self.mesh[-1][1] = point[1]
-                elif flagy and point[0] == prevpoint[0]:
+                elif flagy and point[0] == prevpoint[0] and ((point[1] > prevpoint[1]) == dirx):
+                    self.mesh[-1][0] = point[0]
+                    self.mesh[-1][1] = point[1]
+                elif flagy and point[1] == prevpoint[1] and ((point[0] > prevpoint[0]) != dirx):
+                    self.mesh[-1][0] = point[0]
+                    self.mesh[-1][1] = point[1]
+                elif flagx and point[0] == prevpoint[0] and ((point[1] > prevpoint[1]) != diry):
                     self.mesh[-1][0] = point[0]
                     self.mesh[-1][1] = point[1]
                 else:
@@ -148,6 +163,8 @@ class ProcessaMalhaEsparsa:
                     flagx = 1
                 elif point[1] == self.mesh[-2][1]:
                     flagy = 1
+                dirx = point[0] > self.mesh[-2][0]
+                diry = point[1] > self.mesh[-2][1]
                 prevpoint = point
         point = self.mesh[0]
         if flagx:
@@ -166,25 +183,38 @@ class ProcessaMalhaEsparsa:
     Retorna a coordenada do nó da malha onde o ponto informado está 
     """
 
+    #def getNode(self, xpoint, ypoint):
+    #    auxX = xpoint
+    #    auxY = ypoint
+    #    flag = 0
+    #    for r in self.ranges:
+    #        if r["xi"] <= xpoint <= r["xf"] and r["yi"] <= ypoint <= r["yf"]:
+    #            auxX = (xpoint - r["xi"]) // r["dx"] * r["dx"] + r["xi"]
+    #            auxY = (ypoint - r["yi"]) // r["dy"] * r["dy"] + r["yi"]
+    #            flag = 1
+    #        elif auxX == r["xf"] and r["yi"] < auxY < r["yf"]:
+    #            auxY = (ypoint - r["yi"]) // r["dy"] * r["dy"] + r["yi"]
+    #        elif r["xi"] < auxX < r["xf"] and auxY == r["yf"]:
+    #            auxX = (xpoint - r["xi"]) // r["dx"] * r["dx"] + r["xi"]
+    #    if flag:
+    #        return[auxX, auxY] 
+    #    print("A figura é maior que os limites da malha")
+    #    quit(1)
+
     def getNode(self, xpoint, ypoint):
         auxX = xpoint
         auxY = ypoint
         flag = 0
-        for r in self.ranges:
+        for r in self.ranges[::-1]:
             if r["xi"] <= xpoint <= r["xf"] and r["yi"] <= ypoint <= r["yf"]:
                 auxX = (xpoint - r["xi"]) // r["dx"] * r["dx"] + r["xi"]
                 auxY = (ypoint - r["yi"]) // r["dy"] * r["dy"] + r["yi"]
                 flag = 1
-            elif auxX == r["xf"] and r["yi"] < auxY < r["yf"]:
-                auxY = (ypoint - r["yi"]) // r["dy"] * r["dy"] + r["yi"]
-            elif r["xi"] < auxX < r["xf"] and auxY == r["yf"]:
-                auxX = (xpoint - r["xi"]) // r["dx"] * r["dx"] + r["xi"]
+                break
         if flag:
             return[auxX, auxY] 
         print("A figura é maior que os limites da malha")
         quit(1)
-
-
 
     """
     Percore x e y, obtendo os nós da malha irregular para cada ponto com a função getNode, 
@@ -197,14 +227,22 @@ class ProcessaMalhaEsparsa:
         self.mesh.append(prevpoint)
         flagx = 0
         flagy = 0
+        dirx = prevpoint[0] > self.x[-2]
+        diry = prevpoint[1] > self.y[-2]
         tam = len(self.x)
         for i in range(1,tam):
             point = self.getNode(self.x[i], self.y[i])
             if point[0] != prevpoint[0] or point[1] != prevpoint[1]:
-                if flagx and point[1] == prevpoint[1]:
+                if flagx and point[1] == prevpoint[1] and ((point[0] > prevpoint[0]) != diry):
                     self.mesh[-1][0] = point[0]
                     self.mesh[-1][1] = point[1]
-                elif flagy and point[0] == prevpoint[0]:
+                elif flagy and point[0] == prevpoint[0] and ((point[1] > prevpoint[1]) == dirx):
+                    self.mesh[-1][0] = point[0]
+                    self.mesh[-1][1] = point[1]
+                elif flagy and point[1] == prevpoint[1] and ((point[0] > prevpoint[0]) != dirx):
+                    self.mesh[-1][0] = point[0]
+                    self.mesh[-1][1] = point[1]
+                elif flagx and point[0] == prevpoint[0] and ((point[1] > prevpoint[1]) != diry):
                     self.mesh[-1][0] = point[0]
                     self.mesh[-1][1] = point[1]
                 else:
@@ -215,6 +253,8 @@ class ProcessaMalhaEsparsa:
                     flagx = 1
                 elif point[1] == self.mesh[-2][1]:
                     flagy = 1
+                dirx = point[0] > self.mesh[-2][0]
+                diry = point[1] > self.mesh[-2][1]
                 prevpoint = point
         point = self.mesh[0]
         if flagx:

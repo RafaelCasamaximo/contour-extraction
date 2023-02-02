@@ -13,8 +13,9 @@ from processaMalhaEsparsa import ProcessaMalhaEsparsa
 @click.option('--output', '-o', help='Output file name for contour export.')
 @click.option('--rangefile', '-r', required=True, help='File name for critical regions of the mesh.')
 @click.option('--adapt', '-adapt', is_flag=True, help='Set the mesh mode as adapt')
+@click.option('--anticw', '-acw', is_flag=True, help='Required when the countour in inputfile is anti-clockwise.')
 
-def cli(inputfile, output, rangefile, adapt):
+def cli(inputfile, output, rangefile, adapt, anticw):
     """A program that generates a not equally spaced mesh using the context output."""
 
     if not os.path.isfile(inputfile):
@@ -31,7 +32,7 @@ def cli(inputfile, output, rangefile, adapt):
         xarray.append(float(aux[0]))
         yarray.append(float(aux[1]))
     f.close()
-    malha = ProcessaMalhaEsparsa(xarray, yarray)
+    malha = ProcessaMalhaEsparsa(xarray, yarray, anticw)
     r = open(rangefile, 'r')
     for line in r.readlines():
         aux = line.split()

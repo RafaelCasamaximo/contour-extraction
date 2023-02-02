@@ -71,25 +71,43 @@ class ProcessaImagem:
         startPixel = self.encontra_ponto_inicial()
         self.boundary.append(startPixel)
         pixel = startPixel
-
-        backtrackIndexStart = 0  # (0, -1)
+    
+        backtrackIndexStart = 5
         countourPixel, backtrackIndexStart = self.moore_neighborhood(
             pixel, backtrackIndexStart)
+        self.boundary.append(countourPixel)
 
-        # for i in range(2000):
         while countourPixel != startPixel:
             countourPixel, backtrackIndexStart = self.moore_neighborhood(
                 countourPixel, backtrackIndexStart)
             self.boundary.append(countourPixel)
+
+        xmin = min(self.boundary, key = lambda x:x.x).x
+        ymin = min(self.boundary, key = lambda x:x.y).y
+        xmax = max(self.boundary, key = lambda x:x.x).x
+        ymax = max(self.boundary, key = lambda x:x.y).y
+        self.nx = xmax - xmin
+        self.ny = ymax - ymin
 
     """
     Função responsável por exportar o resultado da extração de contorno em um arquivo path
     """
 
     def exporta_contorno(self, path, interval):
+        nx = self.nx
+        ny = self.ny
+        xmin = min(self.boundary, key = lambda x:x.x).x
+        ymin = min(self.boundary, key = lambda x:x.y).y
+        xmax = max(self.boundary, key = lambda x:x.x).x
+        ymax = max(self.boundary, key = lambda x:x.y).y
         try:
+            resultado = ""
             with open(path, "w") as dataFile:
-                resultado = self.converte_pixelArray_to_string(
+                resultado = resultado + str(nx) + " " + str(ny) + '\n'
+                resultado = resultado + str(xmin) + " " + str(ymin) + '\n'
+                resultado = resultado + str(xmax) + " "  + str(ymax) + '\n'
+                resultado = resultado + str((xmax - xmin)/nx) + " " + str((ymax - ymin)/ny) + '\n'
+                resultado = resultado + self.converte_pixelArray_to_string(
                     self.boundary, interval)
                 dataFile.write(resultado)
         except:
@@ -130,11 +148,14 @@ class ProcessaImagem:
             index = (i + backtrackIndex) % 8
             neighborX = p.x + self.MOORE_OFFSET[index][0]
             neighborY = p.y + self.MOORE_OFFSET[index][1]
-            neighborValue = self.bidimensional_image[neighborY][neighborX]
+            try:
+                neighborValue = self.bidimensional_image[neighborY][neighborX]
+            except:
+                neighborValue = 0
             neighborPixel = Pixel(neighborX, neighborY, neighborValue)
             if neighborPixel.value == 255:
                 self.img[neighborY][neighborX] = [255, 0, 0]
-                return neighborPixel, index - 1
+                return neighborPixel, index + 5
 
     """
     Essa função é utilizada para converter um array de pixeis em uma string para ser impressa no arquivo de texto. Retorna a string.
@@ -143,8 +164,6 @@ class ProcessaImagem:
     def converte_pixelArray_to_string(self, array, intervalo):
         intervalo = intervalo
         content = ''
-        # for element in array:
-        #     content = content + str(element.x) + " " + str(element.y) + "\n"
         i = 0
         while i < len(array):
             element = array[i]
@@ -178,17 +197,8 @@ class ProcessaImagem:
     """
 
     def converte_matlab(self):
-        print(self.yTotal)
-        print(self.yTotal - min(self.boundary, key=lambda x: x.y).y)
-        print(self.yTotal - max(self.boundary, key=lambda x: x.y).y)
         for pixel in self.boundary:
             pixel.y = self.yTotal - pixel.y
-            #aux = pixel.y
-            #pixel.y = pixel.x
-            #pixel.x = aux
-        #aux = self.xTotal
-        #self.xTotal = self.yTotal
-        #self.yTotal = aux
 
     """
     Utiliza um método descrito por Gauss para o cálculo da área de um poligono irregular convexo
